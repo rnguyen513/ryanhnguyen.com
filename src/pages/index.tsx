@@ -13,7 +13,7 @@ export default function Home() {
           <p className={"font-bold text-8xl text-white drop-shadow-2xl dark:text-white-200"}>Explore<br></br>Ryan<br></br>Nguyen &rarr;</p>
           <p className={"absolute invisible group-hover:visible font-bold text-8xl ml-1 mt-1 text-white/50"}>Explore<br></br>Ryan<br></br>Nguyen &rarr;</p>
         </a>
-        <a href="https://www.github.com" className={"group flex flex-row justify-center bg-gray-100/10 sm:mx-auto sm:max-w-fit md:min-h-fit sm:rounded-lg ring-1 ring-gray-300/10 shadow-lg shadow-white/20 p-5 pb-7 hover:bg-gray-100/5 hover:ring-gray-300/5 mt-5"}>
+        <a href="https://github.com/rnguyen513?tab=repositories" className={"group flex flex-row justify-center bg-gray-100/10 sm:mx-auto sm:max-w-fit md:min-h-fit sm:rounded-lg ring-1 ring-gray-300/10 shadow-lg shadow-white/20 p-5 pb-7 hover:bg-gray-100/5 hover:ring-gray-300/5 mt-5"}>
           <p className={"font-bold text-2xl text-white drop-shadow-lg"}>See the <code className={"group-hover:text-blue-400"}>$ource c0de</code> &rarr;</p>
         </a>
       </div>

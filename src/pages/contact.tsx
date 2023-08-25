@@ -1,12 +1,23 @@
 import Background from "./components/background"
 import Header from "./components/header"
 
+export function MediaTitle({text, href}:{text:string, href: string}) {
+    return(
+        <a href={href} className={"text-white font-bold text-7xl sm:text-8xl hover:text-blue-400"}>{text} &rarr;</a>
+    )
+}
+
 export default function Contact() {
     return(
-        <div className={"min-h-screen"}>
+        <div className={"flex flex-col min-h-screen"}>
             <Header></Header>
             <Background></Background>
-            <p>Contact</p>
+            <div className={"flex flex-col flex-grow justify-center items-center"}>
+                <div className={"flex flex-col items-center"}>
+                    <MediaTitle text="LinkedIn" href="https://www.linkedin.com/in/ryan-nguyen-82b387284/"></MediaTitle>
+                    <MediaTitle text="Email" href="mailto:rnguyen3372@gmail.com"></MediaTitle>
+                </div>
+            </div>
         </div>
     )
 }

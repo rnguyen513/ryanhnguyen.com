@@ -6,7 +6,7 @@ export default function Projects() {
         <div className={"min-h-screen"}>
             <Header></Header>
             <Background></Background>
-            <p>Projects</p>
+            <p className={"text-white"}>Projects...still working on it</p>
         </div>
     )
 }
