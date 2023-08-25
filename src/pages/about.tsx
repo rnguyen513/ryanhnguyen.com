@@ -16,7 +16,7 @@ export default function About() {
                 </p>
                 <div className="min-w-full flex flex-row justify-around -mt-5">
                     <Image src="/aboutryan2.jpg" width={375} height={600} alt="Ryan Nguyen" className={"invisible lg:visible ring-1 ring-white/20"}></Image>
-                    <Image src="/aboutryan.JPEG" width={375} height={600} alt="Ryan Nguyen" className={"invisible sm:visible ring-1 ring-white/20"}></Image>
+                    <Image src="/aboutryan.JPEG" width={375} height={600} alt="Ryan Nguyen" className={"ring-1 ring-white/20"}></Image>
                     <Image src="/aboutryan3.jpg" width={375} height={600} alt="Ryan Nguyen" className={"invisible lg:visible ring-1 ring-white/20"}></Image>
                 </div>
             </div>
