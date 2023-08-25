@@ -17,6 +17,9 @@ export default function Home() {
           <p className={"font-bold text-2xl text-white drop-shadow-lg"}>See the <code className={"group-hover:text-blue-400"}>$ource c0de</code> &rarr;</p>
         </a>
       </div>
+      <div className={"absolute bottom-0 right-0 h-15 w-15"}>
+        <p className={"font-bold text-white/50 text-sm"}>Background by: not Ryan :(</p>
+      </div>
     </div>
   )
 }
