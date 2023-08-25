@@ -1,11 +1,12 @@
+import Background from "./components/background"
 import Header from "./components/header"
 
 export default function Projects() {
     return(
-        <div className={"bg-green-200 min-h-screen overflow-hidden"}>
+        <div className={"min-h-screen"}>
             <Header></Header>
-            <p>projects</p>
-            <div className={"min-h-screen bg-black"}></div>
+            <Background></Background>
+            <p>Projects</p>
         </div>
     )
 }

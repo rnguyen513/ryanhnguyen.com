@@ -1,11 +1,12 @@
+import Background from "./components/background"
 import Header from "./components/header"
 
 export default function Contact() {
     return(
-        <div className={"bg-green-200 min-h-screen overflow-hidden"}>
+        <div className={"min-h-screen"}>
             <Header></Header>
+            <Background></Background>
             <p>Contact</p>
-            <div className={"min-h-screen bg-black"}></div>
         </div>
     )
 }
