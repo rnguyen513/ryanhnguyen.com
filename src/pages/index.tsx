@@ -18,7 +18,7 @@ export default function Home() {
         </a>
       </div>
       <div className={"absolute bottom-0 right-0 h-15 w-15"}>
-        <p className={"font-bold text-white/50 text-sm"}>Background by: not Ryan</p>
+        <p className={"font-bold text-white/50 text-sm"}>Background by: Osorina Irina</p>
       </div>
     </div>
   )
