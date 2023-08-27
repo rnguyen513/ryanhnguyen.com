@@ -1,13 +1,12 @@
 import Background from "./components/background"
 import Header from "./components/header"
-import GetProjects from "./components/GetProjects";
 
 export default function Projects() {
     
-    let _projects;
-    GetProjects().then(asdf => _projects=asdf);
+    //let _projects;
+    //GetProjects().then(asdf => _projects=asdf);
 
-    console.log(_projects);
+    //console.log(_projects);
 
     return(
         <div className={"relative min-h-screen overflow-hidden"}>
