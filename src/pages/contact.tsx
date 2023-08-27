@@ -9,7 +9,7 @@ export function MediaTitle({text, href}:{text:string, href: string}) {
 
 export default function Contact() {
     return(
-        <div className={"flex flex-col min-h-screen"}>
+        <div className={"relative flex flex-col min-h-screen overflow-hidden"}>
             <Header></Header>
             <Background></Background>
             <div className={"flex flex-col flex-grow justify-center items-center"}>

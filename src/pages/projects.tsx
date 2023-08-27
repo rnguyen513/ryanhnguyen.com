@@ -1,12 +1,19 @@
 import Background from "./components/background"
 import Header from "./components/header"
+import { GetProjects } from "./components/GetProjects";
 
 export default function Projects() {
+    
+    let _projects;
+    GetProjects().then(asdf => _projects=asdf);
+
+    console.log(_projects);
+
     return(
-        <div className={"min-h-screen"}>
+        <div className={"relative min-h-screen overflow-hidden"}>
             <Header></Header>
             <Background></Background>
-            <p className={"text-white"}>Projects...still working on it</p>
+            <p className={"text-white"}>Projects...still working on it<br></br>{}</p>
         </div>
     )
 }

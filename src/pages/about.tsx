@@ -4,7 +4,7 @@ import Image from "next/image";
 
 export default function About() {
     return(
-        <div className={"flex flex-col min-h-screen"}>
+        <div className={"flex flex-col min-h-screen overflow-hidden"}>
             <Header></Header>
             <Background></Background>
             <div className={"flex flex-col flex-grow justify-start items-center"}>
@@ -14,10 +14,23 @@ export default function About() {
                     circuitry, and Internet of Things (IoT)</a> projects. I am <a className={"text-red-300"}>interested in research pertaining 
                     to artificial intelligence/machine learning</a> in all contexts. You can explore my <a href="resume" className={"hover:text-blue-400"}>resume</a>, <a href="projects" className={"hover:text-blue-400"}>projects</a>, and <a href="contact" className={"hover:text-blue-400"}>contact information</a>.
                 </p>
-                <div className="min-w-full flex flex-row justify-around -mt-5">
-                    <Image src="/aboutryan2.jpg" width={375} height={600} alt="Ryan Nguyen" className={"invisible lg:visible ring-1 ring-white/20"}></Image>
-                    <Image src="/aboutryan.JPEG" width={375} height={600} alt="Ryan Nguyen" className={"ring-1 ring-white/20"}></Image>
-                    <Image src="/aboutryan3.jpg" width={375} height={600} alt="Ryan Nguyen" className={"invisible lg:visible ring-1 ring-white/20"}></Image>
+                <div className="min-w-full flex flex-row flex-grow flex-wrap justify-around -mt-5">
+                    <Image src="/pics/aboutryan2.jpg" width={375} height={600} alt="Ryan Nguyen" className={"ring-1 ring-white/20"}></Image>
+                    <Image src="/pics/aboutryan.JPEG" width={375} height={600} alt="Ryan Nguyen" className={"ring-1 ring-white/20"}></Image>
+                    <Image src="/pics/ryan4.JPG" width={375} height={600} alt="Ryan Nguyen" className={"ring-1 ring-white/20"}></Image>
+                    <Image src="/pics/ryan5.jpg" width={375} height={600} alt="Ryan Nguyen" className={"ring-1 ring-white/20"}></Image>
+                    <Image src="/pics/ryan6.jpg" width={375} height={600} alt="Ryan Nguyen" className={"hidden lg:flex ring-1 ring-white/20"}></Image>
+                    <Image src="/pics/ryan7.JPEG" width={375} height={600} alt="Ryan Nguyen" className={"hidden lg:flex ring-1 ring-white/20"}></Image>
+                    <Image src="/pics/ryan8.jpg" width={375} height={600} alt="Ryan Nguyen" className={"hidden lg:flex ring-1 ring-white/20"}></Image>
+                    <Image src="/pics/ryan9.jpg" width={375} height={600} alt="Ryan Nguyen" className={"hidden lg:flex ring-1 ring-white/20"}></Image>
+                    <Image src="/pics/ryan10.jpg" width={375} height={600} alt="Ryan Nguyen" className={"hidden lg:flex ring-1 ring-white/20"}></Image>
+                    <Image src="/pics/ryan11.JPEG" width={375} height={600} alt="Ryan Nguyen" className={"hidden lg:flex ring-1 ring-white/20"}></Image>
+                    <Image src="/pics/ryan12.jpg" width={375} height={600} alt="Ryan Nguyen" className={"hidden lg:flex ring-1 ring-white/20"}></Image>
+                    <Image src="/pics/ryan13.jpg" width={375} height={600} alt="Ryan Nguyen" className={"hidden lg:flex ring-1 ring-white/20"}></Image>
+                    <Image src="/pics/ryan14.jpg" width={375} height={600} alt="Ryan Nguyen" className={"hidden lg:flex ring-1 ring-white/20"}></Image>
+                    <Image src="/pics/ryan15.jpg" width={375} height={600} alt="Ryan Nguyen" className={"hidden lg:flex ring-1 ring-white/20"}></Image>
+                    <Image src="/pics/ryan16.jpg" width={375} height={600} alt="Ryan Nguyen" className={"hidden lg:flex ring-1 ring-white/20"}></Image>
+                    <Image src="/pics/ryan17.jpg" width={375} height={600} alt="Ryan Nguyen" className={"hidden lg:flex ring-1 ring-white/20"}></Image>
                 </div>
             </div>
         </div>

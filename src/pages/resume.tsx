@@ -3,7 +3,7 @@ import Header from "./components/header"
 
 export default function Resume() {
     return(
-        <div className={"min-h-screen"}>
+        <div className={"relative min-h-screen overflow-hidden"}>
             <Header></Header>
             <Background></Background>
             <div className={"w-100 flex flex-row justify-center"}>
