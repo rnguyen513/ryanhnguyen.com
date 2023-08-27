@@ -1,6 +1,6 @@
 import Background from "./components/background"
 import Header from "./components/header"
-import { GetProjects } from "./components/GetProjects";
+import GetProjects from "./components/GetProjects";
 
 export default function Projects() {
     
