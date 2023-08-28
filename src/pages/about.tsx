@@ -12,9 +12,9 @@ export default function About() {
                     <a className="text-3xl md:text-6xl">M</a>y name is <a href="." className="text-3xl md:text-6xl hover:text-blue-400">Ryan Nguyen.</a> I am currently a first-year student at the University of Virginia in Charlottesville, VA. 
                     I plan to pursue <a className={"underline"}>computer science</a>, and I also have <a className={"text-yellow-200"}>experience in embedded electronics, 
                     circuitry, and Internet of Things (IoT)</a> projects. I am <a className={"text-red-300"}>interested in research pertaining 
-                    to artificial intelligence/machine learning</a> in all contexts. You can explore my <a href="resume" className={"hover:text-blue-400"}>resume</a>, <a href="projects" className={"hover:text-blue-400"}>projects</a>, and <a href="contact" className={"hover:text-blue-400"}>contact information</a>.
+                    to artificial intelligence/machine learning</a> in all contexts. You can check out my <a href="resume" className={"hover:text-blue-400"}>resume</a>, <a href="projects" className={"hover:text-blue-400"}>projects</a>, and <a href="contact" className={"hover:text-blue-400"}>contact information</a>.
                 </p>
-                <div className="min-w-full flex flex-row flex-grow flex-wrap justify-around -mt-5">
+                <div className="min-w-full flex flex-row flex-grow flex-wrap justify-around -mt-5 gap-y-5">
                     <Image src="/pics/aboutryan2.jpg" width={375} height={600} alt="Ryan Nguyen" className={"ring-1 ring-white/20"}></Image>
                     <Image src="/pics/aboutryan.JPEG" width={375} height={600} alt="Ryan Nguyen" className={"ring-1 ring-white/20"}></Image>
                     <Image src="/pics/ryan4.JPG" width={375} height={600} alt="Ryan Nguyen" className={"ring-1 ring-white/20"}></Image>
