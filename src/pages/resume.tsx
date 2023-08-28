@@ -7,7 +7,7 @@ export default function Resume() {
             <Header></Header>
             <Background></Background>
             <div className={"w-100 flex flex-row justify-center"}>
-                <object data="testpdf.pdf" type="application/pdf" width="95%" height="850px" className={"mt-5 ring-2 ring-gray-300/30 rounded-2xl shadow-lg shadow-white/20"}>
+                <object data="resume_august2023.pdf" type="application/pdf" width="95%" height="850px" className={"mt-5 ring-2 ring-gray-300/30 rounded-2xl shadow-lg shadow-white/20"}>
                     <p className={"font-2xl text-white font-bold"}>Unable to preview resume. <a href="https://www.github.com">View here </a>instead.</p>
                 </object>
             </div>

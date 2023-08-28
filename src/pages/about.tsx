@@ -17,7 +17,7 @@ export default function About() {
                 <div className="min-w-full flex flex-row flex-grow flex-wrap justify-around -mt-5 gap-y-5">
                     <Image src="/pics/aboutryan2.jpg" width={375} height={600} alt="Ryan Nguyen" className={"ring-1 ring-white/20"}></Image>
                     <Image src="/pics/aboutryan.JPEG" width={375} height={600} alt="Ryan Nguyen" className={"ring-1 ring-white/20"}></Image>
-                    <Image src="/pics/ryan4.JPG" width={375} height={600} alt="Ryan Nguyen" className={"ring-1 ring-white/20"}></Image>
+                    <Image src="/pics/ryan17.jpg" width={375} height={600} alt="Ryan Nguyen" className={"ring-1 ring-white/20"}></Image>
                     <Image src="/pics/ryan5.jpg" width={375} height={600} alt="Ryan Nguyen" className={"ring-1 ring-white/20"}></Image>
                     <Image src="/pics/ryan6.jpg" width={375} height={600} alt="Ryan Nguyen" className={"hidden lg:flex ring-1 ring-white/20"}></Image>
                     <Image src="/pics/ryan7.JPEG" width={375} height={600} alt="Ryan Nguyen" className={"hidden lg:flex ring-1 ring-white/20"}></Image>
@@ -29,9 +29,7 @@ export default function About() {
                     <Image src="/pics/ryan13.jpg" width={375} height={600} alt="Ryan Nguyen" className={"hidden lg:flex ring-1 ring-white/20"}></Image>
                     <Image src="/pics/ryan14.jpg" width={375} height={600} alt="Ryan Nguyen" className={"hidden lg:flex ring-1 ring-white/20"}></Image>
                     <Image src="/pics/ryan15.jpg" width={375} height={600} alt="Ryan Nguyen" className={"hidden lg:flex ring-1 ring-white/20"}></Image>
-                    <Image src="/pics/ryan16.jpg" width={375} height={600} alt="Ryan Nguyen" className={"hidden lg:flex ring-1 ring-white/20"}></Image>
-                    <Image src="/pics/ryan17.jpg" width={375} height={600} alt="Ryan Nguyen" className={"hidden lg:flex ring-1 ring-white/20"}></Image>
-                </div>
+                    <Image src="/pics/ryan16.jpg" width={375} height={600} alt="Ryan Nguyen" className={"hidden lg:flex ring-1 ring-white/20"}></Image>                </div>
             </div>
         </div>
     )
