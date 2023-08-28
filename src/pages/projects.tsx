@@ -2,16 +2,28 @@ import { useEffect, useState } from "react"
 import Background from "./components/background"
 import Header from "./components/header"
 
+const ProjTemplate = ({_proj}:{_proj:any}) => {
+    return(
+        <a href={_proj.html_url} target="_blank" className={"group flex flex-col ring-1 ring-gray-300/10 py-2 px-4 flex-col bg-gray-100/10 rounded-lg"}>
+            <p className={"text-4xl group-hover:text-blue-400 mb-5"}>{_proj.name}</p>
+            <p>{_proj.owner.login}</p>
+            <p className={"text-yellow-200"}>{_proj.description}</p>
+            <p className={"text-red-300"}>{_proj.language}</p>
+            <p>Published: {_proj.created_at}</p>
+        </a>
+    )
+}
+
 const Projects = () => {
 
     const [projects, setProjects] = useState([
         {id:123456789,
-        name:"name",
-        html_url:"https://someurl.com",
-        description:"some description",
-        language:"HTML",
-        created_at:"2022-02-07T10:15:14Z",
-        owner:{login:"someperson"}}
+        name:"[name]",
+        html_url:"[https://someurl.com]",
+        description:"[some description]",
+        language:"[language]",
+        created_at:"[2022-02-07T10:15:14Z]",
+        owner:{login:"[author]"}}
     ]);
     useEffect(() => {
         const getData = async () => {
@@ -22,6 +34,15 @@ const Projects = () => {
         }
         getData();
     },[]);
+
+    const thisProj = {
+        name:"This website!",
+        html_url:"https://github.com/rnguyen513/resume",
+        description:"This website was built using Next.js and hosted on Vercel.",
+        language:"Typescript, Javascript, CSS",
+        created_at:"Present",
+        owner:{login:"Ryan Nguyen"}
+    }
 
     const [color, setColor] = useState("");
     useEffect(() => {
@@ -39,10 +60,9 @@ const Projects = () => {
         <div className={"relative flex flex-col min-h-screen overflow-hidden"}>
             <Header></Header>
             <Background></Background>
-            <div className={"flex flex-col flex-grow min-h-fit justify-center items-center text-white font-bold gap-y-5"}>
-                {projects.map(project => <a key={project.name} href={project.html_url} className={"group flex ring-1 ring-gray-300/10 py-2 px-4 flex-col bg-gray-100/10 rounded-lg hover:text-blue-400"}>
-                    {project.name}
-                </a>)}
+            <div className={"flex flex-col flex-grow min-h-fit justify-center items-center text-white font-bold gap-y-5 mt-5 mb-5"}>
+                <ProjTemplate _proj={thisProj}/>
+                {projects.map(project => <div key={project.name}><ProjTemplate _proj={project}></ProjTemplate></div>)}
             </div>
         </div>
         </>
