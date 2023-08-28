@@ -40,7 +40,7 @@ const Projects = () => {
             <Header></Header>
             <Background></Background>
             <div className={"flex flex-col flex-grow min-h-fit justify-center items-center text-white font-bold gap-y-5"}>
-                {projects.map(project => <a href={project.html_url} className={"group flex ring-1 ring-gray-300/10 py-2 px-4 flex-col bg-gray-100/10 rounded-lg hover:text-blue-400"}>
+                {projects.map(project => <a key={project.name} href={project.html_url} className={"group flex ring-1 ring-gray-300/10 py-2 px-4 flex-col bg-gray-100/10 rounded-lg hover:text-blue-400"}>
                     {project.name}
                 </a>)}
             </div>
