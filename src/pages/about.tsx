@@ -3,6 +3,22 @@ import Header from "./components/header";
 import Image from "next/image";
 
 export default function About() {
+    const srcs = ["/pics/aboutryan2.jpg",
+                    "/pics/aboutryan.JPEG",
+                    "/pics/ryan17.jpg",
+                    "/pics/ryan5.jpg",
+                    "/pics/ryan6.jpg",
+                    "/pics/ryan7.JPEG",
+                    "/pics/ryan8.jpg",
+                    "/pics/ryan9.jpg",
+                    "/pics/ryan10.jpg",
+                    "/pics/ryan11.JPEG",
+                    "/pics/ryan12.jpg",
+                    "/pics/ryan13.jpg",
+                    "/pics/ryan14.jpg",
+                    "/pics/ryan15.jpg",
+                    "/pics/ryan16.jpg"
+                    ]
     return(
         <div className={"flex flex-col min-h-screen overflow-hidden"}>
             <Header></Header>
@@ -15,21 +31,8 @@ export default function About() {
                     to artificial intelligence/machine learning</a> in all contexts. You can check out my <a href="resume" className={"hover:text-blue-400"}>resume</a>, <a href="projects" className={"hover:text-blue-400"}>projects</a>, and <a href="contact" className={"hover:text-blue-400"}>contact information</a>.
                 </p>
                 <div className="min-w-full flex flex-row flex-grow flex-wrap justify-around -mt-5 gap-y-5">
-                    <Image src="/pics/aboutryan2.jpg" width={375} height={600} alt="Ryan Nguyen" className={"ring-1 ring-white/20"}></Image>
-                    <Image src="/pics/aboutryan.JPEG" width={375} height={600} alt="Ryan Nguyen" className={"ring-1 ring-white/20"}></Image>
-                    <Image src="/pics/ryan17.jpg" width={375} height={600} alt="Ryan Nguyen" className={"ring-1 ring-white/20"}></Image>
-                    <Image src="/pics/ryan5.jpg" width={375} height={600} alt="Ryan Nguyen" className={"ring-1 ring-white/20"}></Image>
-                    <Image src="/pics/ryan6.jpg" width={375} height={600} alt="Ryan Nguyen" className={"hidden lg:flex ring-1 ring-white/20"}></Image>
-                    <Image src="/pics/ryan7.JPEG" width={375} height={600} alt="Ryan Nguyen" className={"hidden lg:flex ring-1 ring-white/20"}></Image>
-                    <Image src="/pics/ryan8.jpg" width={375} height={600} alt="Ryan Nguyen" className={"hidden lg:flex ring-1 ring-white/20"}></Image>
-                    <Image src="/pics/ryan9.jpg" width={375} height={600} alt="Ryan Nguyen" className={"hidden lg:flex ring-1 ring-white/20"}></Image>
-                    <Image src="/pics/ryan10.jpg" width={375} height={600} alt="Ryan Nguyen" className={"hidden lg:flex ring-1 ring-white/20"}></Image>
-                    <Image src="/pics/ryan11.JPEG" width={375} height={600} alt="Ryan Nguyen" className={"hidden lg:flex ring-1 ring-white/20"}></Image>
-                    <Image src="/pics/ryan12.jpg" width={375} height={600} alt="Ryan Nguyen" className={"hidden lg:flex ring-1 ring-white/20"}></Image>
-                    <Image src="/pics/ryan13.jpg" width={375} height={600} alt="Ryan Nguyen" className={"hidden lg:flex ring-1 ring-white/20"}></Image>
-                    <Image src="/pics/ryan14.jpg" width={375} height={600} alt="Ryan Nguyen" className={"hidden lg:flex ring-1 ring-white/20"}></Image>
-                    <Image src="/pics/ryan15.jpg" width={375} height={600} alt="Ryan Nguyen" className={"hidden lg:flex ring-1 ring-white/20"}></Image>
-                    <Image src="/pics/ryan16.jpg" width={375} height={600} alt="Ryan Nguyen" className={"hidden lg:flex ring-1 ring-white/20"}></Image>                </div>
+                    {srcs.map(pic => <Image key={pic} src={pic} width={375} height={600} alt="Ryan Nguyen" className="ring-1 ring-white/20"></Image>)}
+                </div>
             </div>
         </div>
     )
