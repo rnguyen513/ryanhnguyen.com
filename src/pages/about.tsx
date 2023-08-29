@@ -4,7 +4,6 @@ import Image from "next/image";
 
 export default function About() {
     const srcs = ["/pics/aboutryan2.jpg",
-                    "/pics/aboutryan.JPEG",
                     "/pics/ryan17.jpg",
                     "/pics/ryan5.jpg",
                     "/pics/ryan6.jpg",
