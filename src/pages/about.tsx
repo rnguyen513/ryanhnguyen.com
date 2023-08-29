@@ -9,12 +9,10 @@ export default function About() {
                     "/pics/ryan6.jpg",
                     "/pics/ryan7.JPEG",
                     "/pics/ryan8.jpg",
-                    "/pics/ryan9.jpg",
                     "/pics/ryan10.jpg",
                     "/pics/ryan11.JPEG",
                     "/pics/ryan12.jpg",
                     "/pics/ryan13.jpg",
-                    "/pics/ryan14.jpg",
                     "/pics/ryan15.jpg",
                     "/pics/ryan16.jpg"
                     ]
