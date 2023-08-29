@@ -62,6 +62,7 @@ const Projects = () => {
             <Background></Background>
             <div className={"flex flex-col flex-grow min-h-fit justify-center items-center text-white font-bold gap-y-5 mt-5 mb-5"}>
                 <ProjTemplate _proj={thisProj}/>
+                <p>following projects were dumped via github api from an account i can't access anymore...not fixable sorry...</p>
                 {projects.map(project => <div key={project.name}><ProjTemplate _proj={project}></ProjTemplate></div>)}
             </div>
         </div>
