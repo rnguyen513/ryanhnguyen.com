@@ -3,7 +3,7 @@ import Header from "./components/header"
 
 export function MediaTitle({text, href}:{text:string, href: string}) {
     return(
-        <a href={href} className={"text-white font-bold text-7xl sm:text-8xl hover:text-blue-400"}>{text} &rarr;</a>
+        <a href={href} target="_blank" className={"text-white font-bold text-7xl sm:text-8xl hover:text-blue-400"}>{text} &rarr;</a>
     )
 }
 
