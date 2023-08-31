@@ -18,7 +18,7 @@ export default function About() {
             <Background></Background>
             <div className={"flex flex-col flex-grow justify-start items-center"}>
                 <p className={"text-white text-xl md:text-3xl font-bold p-20 -mt-5"}>
-                    <a className="text-3xl md:text-6xl">M</a>y name is <a href="." className="text-3xl md:text-6xl hover:text-blue-400">Ryan Nguyen.</a> I am currently a first-year student at the University of Virginia in Charlottesville, VA. 
+                    <a className="text-3xl md:text-6xl">M</a>y name is <a href="." className="text-3xl md:text-6xl hover:text-blue-400">Ryan<b className={"text-3xl"}> </b>Nguyen.</a> I am currently a first-year student at the University of Virginia in Charlottesville, VA. 
                     I plan to pursue <a className={"underline"}>computer science</a>, and I also have <a className={"text-yellow-200"}>experience in embedded electronics, 
                     circuitry, and Internet of Things (IoT)</a> projects. I am <a className={"text-red-300"}>interested in research pertaining 
                     to artificial intelligence/machine learning</a> in all contexts. You can check out my <a href="resume" className={"hover:text-blue-400"}>resume</a>, <a href="projects" className={"hover:text-blue-400"}>projects</a>, and <a href="contact" className={"hover:text-blue-400"}>contact information</a>.
