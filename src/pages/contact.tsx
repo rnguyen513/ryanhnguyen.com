@@ -14,7 +14,7 @@ export default function Contact() {
             <Background></Background>
             <div className={"flex flex-col flex-grow justify-center items-center"}>
                 <div className={"flex flex-col items-center"}>
-                    <MediaTitle text="LinkedIn" href="https://www.linkedin.com/in/ryan-nguyen-82b387284/"></MediaTitle>
+                    <MediaTitle text="LinkedIn" href="https://www.linkedin.com/in/rnguyen2/"></MediaTitle>
                     <MediaTitle text="Email" href="mailto:rnguyen3372@gmail.com"></MediaTitle>
                 </div>
             </div>
