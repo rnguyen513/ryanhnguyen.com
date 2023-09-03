@@ -4,7 +4,7 @@ import Header from "./components/header"
 
 const ProjTemplate = ({_proj}:{_proj:any}) => {
     return(
-        <a href={_proj.html_url} target="_blank" className={"group flex flex-col ring-1 ring-gray-300/10 py-2 px-4 flex-col bg-gray-100/10 rounded-lg"}>
+        <a href={_proj.html_url} target="_blank" className={"group flex flex-col ring-1 ring-gray-300/10 shadow-lg shadow-white/10 py-2 px-4 flex-col bg-gray-100/5 rounded-lg"}>
             <p className={"text-4xl group-hover:text-blue-400 mb-5"}>{_proj.name}</p>
             <p>{_proj.owner.login}</p>
             <p className={"text-yellow-200"}>{_proj.description}</p>
@@ -62,7 +62,7 @@ const Projects = () => {
             <Background></Background>
             <div className={"flex flex-col flex-grow min-h-fit justify-center items-center text-white font-bold gap-y-5 mt-5 mb-5"}>
                 <ProjTemplate _proj={thisProj}/>
-                <p>following projects were dumped via github api from an account i cant access anymore...not fixable sorry...</p>
+                <p>Following projects were dumped via GITHUB API from an account I can&apos;t access anymore...can&apos;t change the names for now sorry...</p>
                 {projects.map(project => <div key={project.name}><ProjTemplate _proj={project}></ProjTemplate></div>)}
             </div>
         </div>
