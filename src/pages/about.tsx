@@ -21,8 +21,8 @@ export default function About() {
             <Background></Background>
             <div className={"flex flex-col flex-grow justify-start items-center"}>
                 <p className={"text-white text-xl md:text-3xl font-bold p-20 -mt-5"}>
-                    <a className="text-3xl md:text-6xl">M</a>y name is <a href="." className="text-3xl md:text-6xl hover:text-blue-400">Ryan<b className={"text-3xl"}> </b>Nguyen.</a> I am currently a first-year student at the University of Virginia in Charlottesville, VA. 
-                    I plan to pursue <a className={"underline"}>computer science</a>, and I also have <a className={"text-yellow-200"}>experience in embedded electronics, 
+                    <a className="text-3xl md:text-6xl">M</a>y name is <a href="." className="text-3xl md:text-6xl hover:text-blue-400">Ryan<b className={"text-3xl"}> </b>Nguyen.</a> I am currently a student at the University of Virginia in Charlottesville, VA. 
+                    I am pursuing <a className={"underline"}>computer science</a>, and I also have <a className={"text-yellow-200"}>experience in embedded electronics, 
                     circuitry, and Internet of Things (IoT)</a> projects. I am <a className={"text-red-300"}>interested in research pertaining 
                     to artificial intelligence/machine learning</a> in all contexts. You can check out my <a href="resume" className={"hover:text-blue-400"}>resume</a>, <a href="projects" className={"hover:text-blue-400"}>projects</a>, and <a href="contact" className={"hover:text-blue-400"}>contact information</a>.
                 </p>
@@ -30,9 +30,9 @@ export default function About() {
                     {srcs.map(pic => <Image key={pic} src={pic} width={375} height={600} alt="Ryan Nguyen" className="ring-1 ring-white/20"></Image>)}
                 </div>
                 <p className={"text-white text-xl md:text-3xl font-bold p-20 -mt-10 -mb-10"}>
-                    <a className="text-3xl md:text-6xl">R</a>yan Nguyen was recently <a href="https://engineering.virginia.edu/i-s2ee" target="_blank" className={"text-green-200"}>hired to the UVA I-S<sup>2</sup>EE Lab&#8599;</a>, which performs research in civil engineering-related disciplines. 
+                    <a className="text-3xl md:text-6xl">R</a>yan was recently <a href="https://engineering.virginia.edu/i-s2ee" target="_blank" className={"text-green-200"}>hired to the UVA I-S<sup>2</sup>EE Lab&#8599;</a>, which performs research in civil engineering-related disciplines. 
                     He is using artificial intelligence to create simulations of the real world (called &quot;digital twins&quot;) that are used for analysis. Computations are performed digitally to model stress/deformation, without conventional finite analysis. Presently, the lab is able to import prerendered
-                    models to an augmented reality environment, but research is being done to develop realtime methods for recognizing environmental objects<br/><br/>Similar research &darr;
+                    models to an augmented reality environment, but research is being done to develop realtime methods for recognizing environmental objects.<br/><br/>Similar research &darr;
                 </p>
                 <iframe width="95%" height="850px" className={"mb-10 ring-1 ring-gray-400/20 rounded-lg bg-white"} src="https://www.sciencedirect.com/science/article/abs/pii/S0965997815000733"></iframe>
             </div>
