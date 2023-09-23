@@ -14,6 +14,9 @@ const ProjTemplate = ({_proj}:{_proj:any}) => {
     )
 }
 
+//https://raw.githubusercontent.com/ryangu23/gmailnoti/main/README.md
+//https://raw.githubusercontent.com/{user}/{repo}/{branch}/README.md
+
 const Projects = () => {
 
     const [projects, setProjects] = useState([
