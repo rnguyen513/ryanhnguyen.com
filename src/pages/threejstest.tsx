@@ -160,7 +160,7 @@ const StarSystem = (props:any) => {
 const newBG3 = () => {
 	return(
 		<div className={"absolute min-h-screen h-full w-screen"}>
-			<Canvas>
+			<Canvas camera={{fov:90}}>
 				{/*<OrbitControls></OrbitControls>*/}
 				<ambientLight intensity={1}></ambientLight>
 				{/*<Sky sunPosition={[1000,1000,200]}></Sky>*/}
