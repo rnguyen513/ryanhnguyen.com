@@ -1,8 +1,24 @@
-import React, {useRef, useEffect} from "react";
+import React, {useRef, useEffect, useState} from "react";
 import {Sky, OrbitControls, Sphere} from "@react-three/drei";
-import { Canvas, useFrame } from "@react-three/fiber";
+import { Canvas, useFrame, SphereGeometryProps, useThree } from "@react-three/fiber";
+import * as THREE from "three";
+import Script from "next/script";
+import * as bg from "./components/bg";
+//import { useThree } from "./components/useThree"
+import threeApp from "./components/three/threeApp"
 
 const Box = (props:any) => {
+	let _ref = useRef({
+		rotation: {
+			x:0,
+			y:0,
+			z:0
+		}
+	})
+
+	//const [hovered, setHover] = useState(false)
+	//const [active, setActive] = useState(false)
+	//useFrame((state, delta) => (_ref.current.rotation.x += delta))
     return(
         <mesh {...props}>
             <boxGeometry args={[1,1,1]}></boxGeometry>
@@ -10,25 +26,153 @@ const Box = (props:any) => {
         </mesh>
     )
 }
+//console.log("hello")
 
 //<OrbitControls></OrbitControls>
 
 const ThreeBG = () => {
+	/*
+	const geometry = new THREE.SphereGeometry(1000,100,50);
+
+	const materialOptions = {
+		size: 1.0,
+		//transparency: true,
+		opacity: 0.7
+	}
+
+	const starStuff = new THREE.PointsMaterial(materialOptions);
+
+	for (let i=0;i<1000;i++) {
+		const starVertex = new THREE.Vector3()
+		starVertex.x = Math.random() * 2000 - 1000;
+		starVertex.y = Math.random() * 2000 - 1000;
+		starVertex.z = Math.random() * 2000 - 1000;
+		//geometry.vertices.push(starVertex)
+	}
+
+	const scene = new THREE.Scene()
+
+	const camera = new THREE.PerspectiveCamera(90, 2, 0.1, 500);
+
+	const renderer = new THREE.WebGLRenderer({antialias: true});
+	renderer.setSize(window.innerWidth,window.innerHeight);
+	renderer.render(scene, camera)
+
+	const tesst = <div><h1>klsjdklf</h1><p>kj3434</p></div>
+
+	*/
+
+	const bg = <div className={"absolute min-h-screen h-full w-screen"}>
+		<Canvas>
+			<OrbitControls></OrbitControls>
+			<ambientLight intensity={1}></ambientLight>
+			<Sky sunPosition={[1000,1000,200]}></Sky>
+            <Box position={[-1.2,0,0]}></Box>
+            <Box position={[1.2,0,0]}></Box>
+            <Sphere position={[0,0,0]}></Sphere>
+		</Canvas>
+	</div>
+
+	//const bg2 = renderer.domElement
+
+    //return bg2
+	return bg
+}
+
+const newBG = () => {
+	return (
+		<div id="base" className={"bg-white"}>
+			<Script>
+				{
+					`
+						import * as THREE from "three"
+						document.getElementById("base").style = "background-color: red"
+						const geometry = new THREE.SphereGeometry(1000,100,50)
+					`
+				}
+			</Script>
+			<p>kalsjdflks{bg.threeBG()}</p>
+		</div>
+	)
+}
+
+/*
+const newBG2 = () => {
+	const canvas = useThree(threeApp);
+	return(
+		<div ref={canvas} className={"h-screen min-h-screen bg-white"}></div>
+	)
+}
+*/
+
+const Star = (props:any) => {
+	let _ref = useRef({
+		rotation: {
+			x:0,
+			y:0,
+			z:0
+		}
+	})
+
+	const [hovered, setHover] = useState(false);
+	const [active, setActive] = useState(false);
+	useFrame((state, delta) => (_ref.current.rotation.x += delta));
     return(
-        <div className={"absolute min-h-screen h-full w-screen"}>
-            <Canvas>
-                <OrbitControls></OrbitControls>
-                <ambientLight intensity={1}></ambientLight>
-                <Sky sunPosition={[1000,1000,200]}></Sky>
-                <Box position={[-1.2,0,0]}></Box>
-                <Box position={[1.2,0,0]}></Box>
-                <Sphere position={[0,0,0]}></Sphere>
-            </Canvas>
-        </div>
+        <mesh {...props}>
+			<sphereGeometry></sphereGeometry>
+            {/*<meshLambertMaterial attach="material" color="white" opacity={0.5}></meshLambertMaterial>*/}
+			<meshBasicMaterial attach="material" color="white" opacity={0.1}></meshBasicMaterial>
+        </mesh>
     )
 }
 
-export default ThreeBG
+const StarSystem = (props:any) => {
+
+	const camera = useThree(state => state.camera);
+
+	let stars = [];
+
+	for (let i=0;i<2000;i++) {
+		const _pos = new THREE.Vector3()
+		_pos.x = Math.random()*1000 - 500;
+		_pos.y = Math.random()*1000 - 500;
+		_pos.z = Math.random()*1000 - 500;
+
+		let _star = <Star position={_pos} size={[0.1,0.1,0.1]} color={"red"}></Star>;
+		stars.push(_star);
+	}
+
+	useFrame((state,delta) => {
+		//camera.position.x += (state.mouse.x - camera.position.x);
+		//camera.position.y += (state.mouse.y - camera.position.y);
+		//const axis = new THREE.Vector3();
+		//axis.x, axis.y, axis.z = 1;
+		//camera.rotateOnWorldAxis(axis, 0.0001);
+		camera.rotateX(state.mouse.y*0.001);
+		camera.rotateY(state.mouse.x*-0.001);
+	})
+
+	return(
+		<>
+			{stars.map(_star => <>{_star}</>)}
+		</>
+	)
+}
+
+const newBG3 = () => {
+	return(
+		<div className={"absolute min-h-screen h-full w-screen"}>
+			<Canvas>
+				{/*<OrbitControls></OrbitControls>*/}
+				<ambientLight intensity={1}></ambientLight>
+				{/*<Sky sunPosition={[1000,1000,200]}></Sky>*/}
+				<StarSystem></StarSystem>
+			</Canvas>
+		</div>
+	)
+}
+
+export default newBG3
 
 /*
 const preload = () => {
