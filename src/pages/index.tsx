@@ -23,7 +23,7 @@ export default function Home() {
           <p className={"font-bold text-2xl text-white drop-shadow-lg"}>Ryan&apos;s <code className={"group-hover:text-blue-400"}>LinkedIn</code> &#8599;</p>
         </a>
         <a href="https://github.com/rnguyen513/resume" target="_blank" className={"group flex flex-row justify-center bg-gray-100/5 sm:mx-auto sm:max-w-fit md:min-h-fit sm:rounded-lg ring-1 ring-gray-300/10 shadow-lg shadow-white/20 p-5 pb-7 hover:bg-gray-100/5 hover:ring-gray-300/5 mt-5 pointer-events-auto"}>
-          <p className={"font-bold text-2xl text-white drop-shadow-lg"}>See the <code className={"group-hover:text-blue-400"}>$ource c0de</code> &#8599;</p>
+          <p className={"font-bold text-2xl text-white drop-shadow-lg"}>See the <code className={"group-hover:text-blue-400"}>$ource code</code> &#8599;</p>
         </a>
       </div>
     </div>
