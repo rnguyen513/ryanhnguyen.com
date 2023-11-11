@@ -2,10 +2,6 @@ import React, {useRef, useEffect, useState} from "react";
 import {Sky, OrbitControls, Sphere} from "@react-three/drei";
 import { Canvas, useFrame, SphereGeometryProps, useThree } from "@react-three/fiber";
 import * as THREE from "three";
-import Script from "next/script";
-import * as bg from "./components/bg";
-//import { useThree } from "./components/useThree"
-import threeApp from "./components/three/threeApp"
 
 const Box = (props:any) => {
 	let _ref = useRef({
@@ -79,6 +75,7 @@ const ThreeBG = () => {
 	return bg
 }
 
+/*
 const newBG = () => {
 	return (
 		<div id="base" className={"bg-white"}>
@@ -95,6 +92,7 @@ const newBG = () => {
 		</div>
 	)
 }
+*/
 
 /*
 const newBG2 = () => {
