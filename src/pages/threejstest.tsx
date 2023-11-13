@@ -216,27 +216,18 @@ const frame = ({ id, name, author, bg, width = 1, height = 1.61803398875, childr
 }
 */
 
-const TestCom = (props:any, asdf:any) => {
-	const _ref = useRef({
-		rotation:{
-			x:0,
-			y:0,
-			z:0
-		},
-		scale:{
-			x:0,
-			y:0,
-			z:0
-		}
-	});
+const TestCom = (props:any) => {
+	const _ref = useRef<THREE.Mesh>(null);
 	const [hovered, setHover] = useState(false);
 	const [rotate, setRotate] = useState(false);
 
 	useEffect(() => {
-
+		//update ref.current if exists
+		//_ref?.current?.update();
 	})
 
 	useFrame((state, delta) => {
+		if (!_ref.current) return;
 		if (rotate) {
 			_ref.current.rotation.x += 1 * delta;
 			_ref.current.rotation.y += 0.5 * delta;
