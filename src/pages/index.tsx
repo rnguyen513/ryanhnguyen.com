@@ -2,7 +2,7 @@ import Image from 'next/image'
 import { Inter } from 'next/font/google'
 import Header from "./components/header"
 import Background from "./components/background"
-import Bg2 from "./threejstest"
+import {NewBG3} from "./threejstest"
 
 const inter = Inter({ subsets: ['latin'] })
 export default function Home() {
@@ -13,7 +13,7 @@ export default function Home() {
   return (
     <div className={"relative flex flex-row min-h-screen overflow-hidden"}>
       {/*<Background></Background>*/}
-      <Bg2></Bg2>
+      <NewBG3></NewBG3>
       <div className={"relative flex flex-col flex-grow min-h-fit justify-center pointer-events-none"}>
         <a href="about" className={"group flex flex-row bg-gray-100/5 sm:mx-auto sm:max-w-fit md:min-h-fit sm:rounded-2xl ring-1 ring-gray-300/10 shadow-lg shadow-white/20 p-10 pb-14 hover:bg-gray-100/5 hover:ring-gray-300/5 pointer-events-auto"}>
           <p className={"font-bold text-8xl text-white drop-shadow-2xl dark:text-white-200"}>Enter<br></br>Ryan<br></br>Nguyen &rarr;</p>
