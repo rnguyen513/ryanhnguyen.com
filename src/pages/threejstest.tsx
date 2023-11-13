@@ -217,7 +217,7 @@ const frame = ({ id, name, author, bg, width = 1, height = 1.61803398875, childr
 */
 
 const TestCom = (props:any) => {
-	const _ref = useRef<THREE.Mesh>(null);
+	const _ref = useRef<THREE.Mesh>(null); //declare as type THREE.Mesh
 	const [hovered, setHover] = useState(false);
 	const [rotate, setRotate] = useState(false);
 
@@ -238,7 +238,7 @@ const TestCom = (props:any) => {
 	})
 
 	return(
-		<mesh {...props} ref={_ref} scale={[0.5,0.5,0.5]} position={rotate ? [0,0,0] : [0,0.2,0.2]}
+		<mesh {...props} ref={_ref} scale={[0.5,0.5,0.5]}
 		onPointerDown={() => setRotate(!rotate)}
 		onPointerOver={() => setHover(true)}
 		onPointerOut ={() => setHover(false)}
