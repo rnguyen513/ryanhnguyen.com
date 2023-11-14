@@ -1,12 +1,17 @@
 import React, {useRef, useEffect, useState} from "react";
-import {Sky, OrbitControls, Sphere, Stats} from "@react-three/drei";
+import {Sky, OrbitControls, Sphere, Stats, RoundedBox, PortalMaterialType} from "@react-three/drei";
 import { Canvas, useFrame, SphereGeometryProps, useThree, extend } from "@react-three/fiber";
 import * as THREE from "three";
 
 import { useCursor, MeshPortalMaterial, CameraControls, Gltf, Text } from '@react-three/drei'
 import { useRoute, useLocation } from 'wouter'
-import { easing, geometry } from 'maath'
 import { suspend } from 'suspend-react'
+import { easing } from "maath";
+import * as geometry from "maath/geometry"
+import { PlaneGeometry } from "three/src/Three.js";
+import { PlaneBufferGeometryProps } from "@react-three/fiber";
+
+extend({easing, geometry, PlaneGeometry});
 
 const Box = (props:any) => {
 	let _ref = useRef({
@@ -185,27 +190,28 @@ const NewBG3 = () => {
 		</div>
 	)
 }
-/*
-const frame = ({ id, name, author, bg, width = 1, height = 1.61803398875, children, ...props }:{id:any,name:any,author:any,bg:any,width:any,height:any,children:any}) => {
-	const portal = useRef()
-	const [, setLocation] = useLocation()
-	const [, params] = useRoute('/item/:id')
-	const [hovered, hover] = useState(false)
+
+const Frame = ({ id, name, author, bg, width = 1, height = 1.61803398875, children, ...props }:{id:any,name:any,author:any,bg:any,width:any,height:any,children:any}) => {
+	extend(geometry);
+	const portal = useRef<PortalMaterialType>(null!);
+	const [, setLocation] = useLocation();
+	const [, params] = useRoute('/item/:id');
+	const [hovered, hover] = useState(false);
 	useCursor(hovered);
 	useFrame((state, dt) => easing.damp(portal.current, 'blend', params?.id === id ? 1 : 0, 0.2, dt));
 	return (
 	  <group {...props}>
-		<Text font={suspend(medium).default} fontSize={0.3} anchorY="top" anchorX="left" lineHeight={0.8} position={[-0.375, 0.715, 0.01]} material-toneMapped={false}>
+		<Text font={"Calibri"} fontSize={0.3} anchorY="top" anchorX="left" lineHeight={0.8} position={[-0.375, 0.715, 0.01]} material-toneMapped={false}>
 		  {name}
 		</Text>
-		<Text font={suspend(regular).default} fontSize={0.1} anchorX="right" position={[0.4, -0.659, 0.01]} material-toneMapped={false}>
+		<Text font={"Calibri"} fontSize={0.1} anchorX="right" position={[0.4, -0.659, 0.01]} material-toneMapped={false}>
 		  /{id}
 		</Text>
-		<Text font={suspend(regular).default} fontSize={0.04} anchorX="right" position={[0.0, -0.677, 0.01]} material-toneMapped={false}>
+		<Text font={"Calibri"} fontSize={0.04} anchorX="right" position={[0.0, -0.677, 0.01]} material-toneMapped={false}>
 		  {author}
 		</Text>
 		<mesh name={id} onDoubleClick={(e) => (e.stopPropagation(), setLocation('/item/' + e.object.name))} onPointerOver={(e) => hover(true)} onPointerOut={() => hover(false)}>
-		  <roundedPlaneGeometry args={[width, height, 0.1]} />
+		  <planeGeometry args={[width, height, 0.1]}></planeGeometry>
 		  <MeshPortalMaterial ref={portal} events={params?.id === id} side={THREE.DoubleSide}>
 			<color attach="background" args={[bg]} />
 			{children}
@@ -214,18 +220,19 @@ const frame = ({ id, name, author, bg, width = 1, height = 1.61803398875, childr
 	  </group>
 	)
 }
-*/
 
 const TestCom = (props:any) => {
 	const _ref = useRef<THREE.Mesh>(null); //declare as type THREE.Mesh
 	const [hovered, setHover] = useState(false);
 	const [rotate, setRotate] = useState(false);
 
+	/*
 	useEffect(() => {
-		//update ref.current if exists
-		//_ref?.current?.update();
+		//run before initial render
 	})
+	*/
 
+	//once before every frame
 	useFrame((state, delta) => {
 		if (!_ref.current) return;
 		if (rotate) {
@@ -233,7 +240,10 @@ const TestCom = (props:any) => {
 			_ref.current.rotation.y += 0.5 * delta;
 		}
 		if (hovered) {
-			_ref.current.scale.z += 0.5 * delta;
+			//_ref.current.scale.z += 0.5 * delta;
+			//_ref.current.scale.x += 0.01;
+			//_ref.current.scale.y += 0.01;
+			//_ref.current.scale.z += 0.01;
 		}
 	})
 
@@ -244,29 +254,67 @@ const TestCom = (props:any) => {
 		onPointerOut ={() => setHover(false)}
 		>
 			<sphereGeometry></sphereGeometry>
-			<meshBasicMaterial color={hovered ? "blue" : "red"} wireframe></meshBasicMaterial>
+			<meshBasicMaterial color={hovered ? "red" : "blue"} wireframe></meshBasicMaterial>
 		</mesh>
+	)
+}
+
+const Frame2 = (props:any, children:any) => {
+	const portal = useRef<THREE.Material>(null!);
+	useFrame((state,delta) => {
+		//nothing
+		return
+	})
+	return(
+		<mesh>
+			<MeshPortalMaterial {...props} ref={portal}>
+				<Gltf src="fiesta_tea-transformed.glb" scale={2} position={[0,0,0]}></Gltf>
+			</MeshPortalMaterial>
+		</mesh>
+	)
+}
+
+const Frame3 = () => {
+	const [, setLocation] = useLocation();
+	return(
+		<>
+			<RoundedBox args={[2,3,0.1]} rotation={[0,Math.PI / 2,0]} position={[-0.5,0,0]} onDoubleClick={(e) => (e.stopPropagation(), setLocation('/item/' + "hello"))}>
+				<MeshPortalMaterial side={THREE.DoubleSide}>
+					<Gltf src="fiesta_tea-transformed.glb" scale={3} position={[-2,0,0]}></Gltf>
+				</MeshPortalMaterial>
+			</RoundedBox>
+			<RoundedBox args={[2,3,0.1]} rotation={[0,Math.PI * -1.4/2,0]} position={[-1,0,3]}>
+				<MeshPortalMaterial side={THREE.DoubleSide}>
+					<Gltf src="fiesta_tea-transformed.glb" scale={3} position={[-2,0,0]}></Gltf>
+				</MeshPortalMaterial>
+			</RoundedBox>
+			<RoundedBox args={[2,3,0.1]} rotation={[0,Math.PI * -0.7/2,0]} position={[-1,0,-3]}>
+				<MeshPortalMaterial side={THREE.DoubleSide}>
+					<Gltf src="fiesta_tea-transformed.glb" scale={3} position={[-2,0,0]}></Gltf>
+				</MeshPortalMaterial>
+			</RoundedBox>
+		</>
 	)
 }
 
 const TestBG = () => {
 	return(
 		<div className={"absolute min-h-screen h-full w-screen"}>
-			<Canvas camera={{position:[2,0,0]}}>
+			<Canvas camera={{position:[-5,0,0]}}>
 				<color attach="background" args={["f0f0f0"]}/>
-				<TestCom position={[-0.75,0,0]}></TestCom>
-				<TestCom position={[-0.75,0,0]} rotation={[1,0,0]}></TestCom>
+				{/*<TestCom position={[-0.75,0,0]}></TestCom>*/}
+				<Frame3></Frame3>
+				<CameraControls makeDefault minPolarAngle={Math.PI / 2} maxPolarAngle={Math.PI / 2}/>
 				<Stats/>
 			</Canvas>
 		</div>
 	)
 }
 
-
 const NewBG4 = () => {
 	return(
 		<div className={"absolute min-h-screen h-full w-screen"}>
-			<Canvas camera={{fov:90, position:[0,0,20]}}>
+			<Canvas camera={{fov:90, position:[0,0,0]}}>
 				<color attach="background" args={["f0f0f0"]}/>
 			</Canvas>
 		</div>
