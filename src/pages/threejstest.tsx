@@ -138,12 +138,14 @@ const Star = (props:any) => {
 			<sphereGeometry></sphereGeometry>
 			<meshBasicMaterial attach="material" color="white" opacity={0.1}></meshBasicMaterial>
         </mesh>*/
-		
+
+		<>
         <mesh {...props}>
 			<sphereGeometry></sphereGeometry>
             {/*<meshLambertMaterial attach="material" color="white" opacity={0.5}></meshLambertMaterial>*/}
 			<meshBasicMaterial attach="material" color="white" opacity={0.1}></meshBasicMaterial>
         </mesh>
+		</>
     )
 }
 
@@ -157,7 +159,7 @@ const StarSystem = (props:any) => {
 		_pos.y = Math.random()*1000 - 500;
 		_pos.z = Math.random()*1000 - 500;
 
-		let _star = <Star position={_pos} size={[0.1,0.1,0.1]} color={"red"}></Star>;
+		let _star = <Star position={_pos} scale={[1,1,1]} color={"red"}></Star>;
 		stars.push(_star);
 	}
 
@@ -210,8 +212,8 @@ const Frame = ({ id, name, author, bg, width = 1, height = 1.61803398875, childr
 		<Text font={"Calibri"} fontSize={0.04} anchorX="right" position={[0.0, -0.677, 0.01]} material-toneMapped={false}>
 		  {author}
 		</Text>
-		<mesh name={id} onDoubleClick={(e) => (e.stopPropagation(), setLocation('/item/' + e.object.name))} onPointerOver={(e) => hover(true)} onPointerOut={() => hover(false)}>
-		  <planeGeometry args={[width, height, 0.1]}></planeGeometry>
+		<mesh name={id} onDoubleClick={(e) => (e.stopPropagation(), setLocation('/fiesta_tea-transformed.glb'/* + e.object.name*/))} onPointerOver={(e) => hover(true)} onPointerOut={() => hover(false)}>
+		  <RoundedBox args={[width, height, 0.1]}></RoundedBox>
 		  <MeshPortalMaterial ref={portal} events={params?.id === id} side={THREE.DoubleSide}>
 			<color attach="background" args={[bg]} />
 			{children}
@@ -274,23 +276,25 @@ const Frame2 = (props:any, children:any) => {
 	)
 }
 
-const Frame3 = () => {
+const Frame3 = (children:any, ...props:any) => {
 	const [, setLocation] = useLocation();
+	const [hovered, hover] = useState(false);
+	useCursor(hovered);
 	return(
-		<>
-			<RoundedBox args={[2,3,0.1]} rotation={[0,Math.PI / 2,0]} position={[-0.5,0,0]} onDoubleClick={(e) => (e.stopPropagation(), setLocation('/item/' + "hello"))}>
+		<>{/*
+			<RoundedBox {...props} position={[0,0,0]} rotation={[0,Math.PI / 2,0]} args={[8,5,0.1]} onDoubleClick={(e) => (e.stopPropagation(), setLocation(`/item/${e.index}`), location.reload())}
+			onPointerOver={(e)=>hover(true)} onPointerOut={(e)=>hover(false)}>
 				<MeshPortalMaterial side={THREE.DoubleSide}>
-					<Gltf src="fiesta_tea-transformed.glb" scale={3} position={[-2,0,0]}></Gltf>
+					{/*<Gltf src="fiesta_tea-transformed.glb" scale={3} position={[-2,0,0]}></Gltf>*/}{/*
+					<StarSystem></StarSystem>
 				</MeshPortalMaterial>
 			</RoundedBox>
-			<RoundedBox args={[2,3,0.1]} rotation={[0,Math.PI * -1.4/2,0]} position={[-1,0,3]}>
+			*/}
+
+			<RoundedBox args={[0.1,0.1,0.1]} rotation={[0, 0, 0]}>
 				<MeshPortalMaterial side={THREE.DoubleSide}>
-					<Gltf src="fiesta_tea-transformed.glb" scale={3} position={[-2,0,0]}></Gltf>
-				</MeshPortalMaterial>
-			</RoundedBox>
-			<RoundedBox args={[2,3,0.1]} rotation={[0,Math.PI * -0.7/2,0]} position={[-1,0,-3]}>
-				<MeshPortalMaterial side={THREE.DoubleSide}>
-					<Gltf src="fiesta_tea-transformed.glb" scale={3} position={[-2,0,0]}></Gltf>
+					<StarSystem></StarSystem>
+					{/*<Gltf src="fiesta_tea-transformed.glb" scale={1} position={[0,0,0]}></Gltf>*/}
 				</MeshPortalMaterial>
 			</RoundedBox>
 		</>
@@ -300,10 +304,14 @@ const Frame3 = () => {
 const TestBG = () => {
 	return(
 		<div className={"absolute min-h-screen h-full w-screen"}>
-			<Canvas camera={{position:[-5,0,0]}}>
+			<Canvas camera={{position:[-1,0,0]}}>
 				<color attach="background" args={["f0f0f0"]}/>
 				{/*<TestCom position={[-0.75,0,0]}></TestCom>*/}
-				<Frame3></Frame3>
+				<Frame3>
+				</Frame3>
+				{/*<Frame id="1" name="ryan" author="ryan" bg="#ffffff" width={10} height={7}>
+					<StarSystem></StarSystem>
+				</Frame>*/}
 				<CameraControls makeDefault minPolarAngle={Math.PI / 2} maxPolarAngle={Math.PI / 2}/>
 				<Stats/>
 			</Canvas>
