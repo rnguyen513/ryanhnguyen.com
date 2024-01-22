@@ -79,7 +79,7 @@ const Projects = () => {
         <div className={"relative flex flex-col min-h-screen overflow-hidden"}>
             <Header></Header>
             <Background></Background>
-            <p className="text-purple-400 font-bold text-3xl">Reminderz <a href="/" className="text-green-400">+</a></p>
+            <p className="text-purple-400 font-bold text-3xl">Reminderz <a href="https://www.google.com" className="text-green-400">+</a></p>
             <div className={"flex flex-row flex-grow flex-wrap min-h-fit text-white font-bold gap-y-5 mt-5 mb-5"}>
                 {/*<ReminderTemplate reminder={someReminder}/>*/}
                 {reminders.map(reminder => <div key={reminder._id}><ReminderTemplate reminder={reminder}></ReminderTemplate></div>)}
