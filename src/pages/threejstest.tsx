@@ -10,6 +10,8 @@ import { easing } from "maath";
 import * as geometry from "maath/geometry"
 import { PlaneGeometry } from "three/src/Three.js";
 import { PlaneBufferGeometryProps } from "@react-three/fiber";
+import { RoundedBoxGeometry } from "three/examples/jsm/geometries/RoundedBoxGeometry.js";
+import { vec3 } from "three/examples/jsm/nodes/Nodes.js";
 
 extend({easing, geometry, PlaneGeometry});
 
@@ -295,6 +297,56 @@ const Frame3 = (children:any, ...props:any) => {
 				<MeshPortalMaterial side={THREE.DoubleSide}>
 					<StarSystem></StarSystem>
 					{/*<Gltf src="fiesta_tea-transformed.glb" scale={1} position={[0,0,0]}></Gltf>*/}
+				</MeshPortalMaterial>
+			</RoundedBox>
+		</>
+	)
+}
+
+const Frame4 = () => {
+	const [, setLocation] = useLocation();
+
+	const portal = useRef<THREE.Mesh>(null!);
+	let up = false;
+	useFrame((state,delta) => {
+		//portal.current.rotation.z += delta*0.5;
+		//portal.current.rotation.x += delta*0.5;
+		//portal.current.rotation.y += delta*0.02;
+		if (portal.current.scale.x < 4) {
+			//portal.current.position.x -= delta*0.5;
+			portal.current.scale.x += delta*0.5;
+			portal.current.scale.y += delta*0.5;
+			portal.current.scale.z += delta*0.5;
+		}
+	})
+
+	return(
+		<>
+			{/*
+			<Text
+				font="fonts/Caprasimo-Regular.ttf"
+				fontSize={0.5}
+				position={[-3,0.3,0]}
+				rotation={[0,-Math.PI/2,0]}
+				anchorY={"bottom"}
+				ref={portal}
+			>
+				Enter
+				Ryan
+				Nguyen
+			</Text>
+			*/}
+			<RoundedBox ref={portal} args={[2,2,2]} rotation={[0,Math.PI/2,0]} position = {[0,0,0]} onDoubleClick={(e) => (e.stopPropagation(), setLocation("/"))}>
+				<MeshPortalMaterial side={THREE.DoubleSide}>
+      				{/*<Background></Background>*/}
+					{/*<Gltf src="fiesta_tea-transformed.glb" scale={3} position={[-2,0,0]}></Gltf>*/}
+      				{/*<NewBG3></NewBG3>*/}
+					
+						{/*<OrbitControls></OrbitControls>*/}
+						<ambientLight intensity={1}></ambientLight>
+						{/*<Sky sunPosition={[1000,1000,200]}></Sky>*/}
+						<StarSystem></StarSystem>
+
 				</MeshPortalMaterial>
 			</RoundedBox>
 		</>
