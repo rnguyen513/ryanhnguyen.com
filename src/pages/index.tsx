@@ -3,14 +3,37 @@ import { Inter } from 'next/font/google'
 import Header from "./components/header"
 import Background from "./components/background"
 import {NewBG3} from "./threejstest"
+import clientPromise from '../../lib/mongodb'
+import type { InferGetServerSidePropsType, GetServerSideProps } from "next"
+
+export type ConnectionStatus = {
+    isConnected: boolean;
+}
+
+export const getServerSideProps: GetServerSideProps<ConnectionStatus> = async () => {
+    try {
+        await clientPromise;
+
+        return {
+            props: {isConnected: true}
+        };
+    }
+    catch (e) {
+        console.error(e);
+        return {
+            props: {isConnected: false}
+        };
+    }
+}
 
 const inter = Inter({ subsets: ['latin'] })
-export default function Home() {
+export default function Home({isConnected}:InferGetServerSidePropsType<typeof getServerSideProps>) {
   //<div className={"absolute bottom-0 right-0 h-15 w-15"}>
   //<p className={"font-bold text-white/50 text-sm"}>Background by: Osorina Irina</p>
   //</div>
   //<a className="flex sm:hidden">(click)</a><a className="hidden sm:flex">&rarr;</a>
   return (
+    <>
     <div className={"relative flex flex-row min-h-screen overflow-hidden"}>
       {/*<Background></Background>*/}
       <NewBG3></NewBG3>
@@ -27,5 +50,10 @@ export default function Home() {
         </a>
       </div>
     </div>
+    <div className="hidden sm:block absolute bottom-1 right-1 text-white text-s font-bold">
+      <a>Database</a>
+      {isConnected ? (<a className="text-s text-green-400 font-bold"> ⬤ Connected</a>):(<a className="text-s text-red-400 font-bold"> ⬤ Not Connected</a>)}
+    </div>
+    </>
   )
 }
