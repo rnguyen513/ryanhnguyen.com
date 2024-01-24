@@ -7,7 +7,7 @@ export default function TestPage() {
         <>
             <h1>Kazakhstan</h1>
             <Panel isActive={active} onShow={() => {setActive(!active)}}>
-                With a population of about 2 million, Almaty is Kazakhstan's largest city. From 1929 to 1997, it was its capital city.
+                With a population of about 2 million, Almaty is Kazakhstan&apos;s largest city. From 1929 to 1997, it was its capital city.
             </Panel>
             <button className="text-white text-xl font-bold" onClick={() => setActive(!active)}>Open</button>
         </>
