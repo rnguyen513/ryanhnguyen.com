@@ -1,8 +1,7 @@
 import { createRef, useRef, useEffect, useState } from "react"
 import Background from "./components/background"
 import Header from "./components/header"
-
-import moment from "moment"
+import { ProgressBar } from "react-bootstrap"
 
 export type reminder = {
     _id: string,
@@ -13,15 +12,18 @@ export type reminder = {
     importance: number
 }
 
-export const toDateTime = (secs:number) => {
+export const toDateTime = (ms:number) => {
 
-    let a = new Date(secs);
+    /*
+    let a = new Date(ms);
     let year = a.getFullYear();
     let month = a.getMonth() + 1;
     let date = a.getDate() + 1;
 
     return(month + "/" + date + "/" + year);
-    //return new Date(secs).toLocaleString("en-US", {timeZone:"EST"});
+    */
+
+    return new Date(ms).toLocaleString("en-US", {timeZone:"EST"});
 }
 
 export const toUnix = (dateString:string) => {
@@ -29,6 +31,16 @@ export const toUnix = (dateString:string) => {
 }
 
 const ReminderTemplate = ({reminder}:{reminder:any}) => {
+    let [percentDone, setPercentDone] = useState((Date.now()-reminder.created)/(reminder.due - reminder.created));
+
+    const progressStyle = (percent:number) => {
+        if (percent >= 0.75) return "success";
+        else if (percent >= 0.25 && percent < 0.75) return "warning";
+        else return "danger";
+    }
+
+    //console.log(reminder.name + " is " + (1-percentDone) + " to being finished");
+
     return(
         <a href="https://www.google.com" target="_blank" className={"group flex flex-col ring-1 ring-gray-300/10 shadow-lg shadow-white/10 py-2 px-4 flex-col bg-gray-100/5 rounded-lg mr-2"}>
             <p className={"text-4xl group-hover:text-blue-400 mb-2"}>{reminder.name}</p>
@@ -36,6 +48,8 @@ const ReminderTemplate = ({reminder}:{reminder:any}) => {
             <p className={"text-yellow-200"}>Importance: {reminder.importance}</p>
             <p className={"text-red-300"}>Due: {toDateTime(parseInt(reminder.due))}</p>
             <p>Created: {toDateTime(reminder.created)}</p>
+            {/*<ProgressBar animated variant={progressStyle(66)} now={66}></ProgressBar>*/}
+            {(percentDone >= 1) ? (<p>Expired!</p>) : (<progress value={(1-percentDone)} className="w-full bg-gray-200 rounded-full h-2.5 color-purple-400"></progress>)}
         </a>
     )
 }
@@ -264,8 +278,8 @@ const Projects = () => {
         <div className={"relative flex flex-col min-h-screen overflow-hidden"}>
             <Header></Header>
             <Background></Background>
-            <p className="text-purple-400 font-bold text-3xl">Reminderz <button className="text-green-400" onClick={() => setIsActive(!isActive)}>&#40;+Add&#41;</button></p>
-            <div key={seed} className={"flex flex-row flex-grow flex-wrap min-h-fit text-white font-bold gap-y-5 mt-5 mb-5"}>
+            <p className="text-purple-400 font-bold text-3xl ml-2">Reminderz <button className="text-green-400" onClick={() => setIsActive(!isActive)}>&#40;+Add&#41;</button></p>
+            <div key={seed} className={"flex flex-row flex-grow flex-wrap min-h-fit text-white font-bold gap-y-5 ml-2 mt-2 mb-5"}>
                 {/*<ReminderTemplate reminder={someReminder}/>*/}
                 {reminders.length ? (
                     <>

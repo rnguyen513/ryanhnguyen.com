@@ -1,16 +1,23 @@
 import { useState } from "react";
 import { AddRemindUI } from "./reminders";
+import { ProgressBar } from "react-bootstrap";
 
 export default function TestPage() {
     const [active, setActive] = useState(false);
+
+    console.log(1-(Date.now()-1706213981788)/(1706486400000-1706213981788));
+    console.log(Date.now());
+
     return(
-        <>
+        <div className="bg-white min-h-screen text-black">
             <h1>Kazakhstan</h1>
             <Panel isActive={active} onShow={() => {setActive(!active)}}>
                 With a population of about 2 million, Almaty is Kazakhstan&apos;s largest city. From 1929 to 1997, it was its capital city.
             </Panel>
-            <button className="text-white text-xl font-bold" onClick={() => setActive(!active)}>Open</button>
-        </>
+            <button className="text-xl font-bold" onClick={() => setActive(!active)}>Open</button>
+            <ProgressBar variant="danger" animated now={66} className=""/>
+            <progress value={0.3}></progress>
+        </div>
     )
 }
 

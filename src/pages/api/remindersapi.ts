@@ -60,7 +60,7 @@ export default async function RemindAPIReq(req:any, res:any) {
                 name: req.body.name,
                 author: "Ryan Nguyen",
                 created: Date.now(),
-                due: req.body.due,
+                due: req.body.due+104340000,
                 importance: req.body.importance
             }
 
