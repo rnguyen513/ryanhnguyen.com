@@ -14,11 +14,18 @@ export type reminder = {
 }
 
 export const toDateTime = (secs:number) => {
-    return new Date(secs).toLocaleString("en-US", {timeZone:"EST"})
+
+    let a = new Date(secs);
+    let year = a.getFullYear();
+    let month = a.getMonth() + 1;
+    let date = a.getDate() + 1;
+
+    return(month + "/" + date + "/" + year);
+    //return new Date(secs).toLocaleString("en-US", {timeZone:"EST"});
 }
 
 export const toUnix = (dateString:string) => {
-    return Math.floor(new Date(dateString).getTime() / 1000);
+    return Math.floor(new Date(dateString).getTime());
 }
 
 const ReminderTemplate = ({reminder}:{reminder:any}) => {
@@ -33,7 +40,7 @@ const ReminderTemplate = ({reminder}:{reminder:any}) => {
     )
 }
 
-export function AddRemindUI({isActive, onShow, refreshList}:any) {
+export function AddRemindUI({isActive, onShow, refreshList, updateRemindersCallback}:any) {
 
     const [name, setName] = useState("");
     const [due, setDue] = useState(0);
@@ -55,11 +62,17 @@ export function AddRemindUI({isActive, onShow, refreshList}:any) {
                     name: _reminder,
                     due: _due,
                     importance: _importance,
-                    key: _key
+                    key: _key,
+                    reqType: "push"
                 })
             });
-            if (request.ok) console.log("pushed", String(_reminder));
+
+            if (request.ok) {/*console.log("pushed", String(_reminder));*/}
             else console.log("failed to push reminder");
+
+            console.log(request);
+
+            return request
         }
         catch (e) {
             console.error("POST error:", e);
@@ -67,8 +80,18 @@ export function AddRemindUI({isActive, onShow, refreshList}:any) {
     }
 
     const checkFieldValid = ({fieldValue, fieldType, fieldStateSetter}:any) => {
+        setReqError({code:0,message:""});
         if (fieldValue.length != "" && typeof fieldValue == fieldType) {fieldStateSetter(fieldValue);return true;}
         else {console.log("errors in input");setAllValid(false);return false}
+    }
+
+    const [reqError, setReqError] = useState({code:0,message:""});
+    const showError = (error:string) => {
+        return(
+            <>
+                {<a className="text-red-400 font-bold text-xl">{error}</a>}
+            </>
+        )
     }
 
     return(
@@ -83,8 +106,16 @@ export function AddRemindUI({isActive, onShow, refreshList}:any) {
                         <input type="date" placeholder="05/06/2024" onChange={(e) => checkFieldValid({fieldValue:toUnix(e.target.value),fieldType:"number",fieldStateSetter:setDue})}></input>
                     </div>
                     <input type="number" placeholder="importance" onChange={(e) => checkFieldValid({fieldValue:Number(e.target.value),fieldType:"number",fieldStateSetter:setImportance})}></input>
-                    <input type="number" placeholder="password" onChange={(e) => checkFieldValid({fieldValue:Number(e.target.value),fieldType:"number",fieldStateSetter:setKey})}></input>
-                    {allValid ? (null) : (<p className="text-red-400 font-bold text-xl">INVALID! cancel and try again...</p>)}
+                    <input type="number" placeholder="password" onChange={(e) => {checkFieldValid({fieldValue:Number(e.target.value),fieldType:"number",fieldStateSetter:setKey})}}></input>
+
+                    {/*if error from user/server*/}
+                    {(!allValid || reqError.code) ? (
+                        <div>
+                            {allValid ? (null) : (<p className="text-red-400 font-bold text-xl">INVALID! cancel and try again...</p>)}
+                            {reqError.code ? (<p>{showError(reqError.message)}</p>) : (null)}
+                        </div>
+                    ) : (null)}
+
                     <div className="flex-row">
                         {/*close button*/}
                         <button className="ring-1 ring-black rounded-lg p-3 mr-3 bg-red-200" onClick={() => {
@@ -113,21 +144,45 @@ export function AddRemindUI({isActive, onShow, refreshList}:any) {
 
                             //at this point, request should be valid (hopefully)
                             //post to database
-                            handleSubmit({_reminder: name, _due: due, _importance: importance, _key: key});
+                            const reqResult = handleSubmit({_reminder: name, _due: due, _importance: importance, _key: key})
+                                .then(res => res?.json()
+                                    .then(data => ({status: res.status, body: data})))
+                                .then(obj => {
+                                    console.log("response from server:", obj);
+                                    if (obj?.status != 200) {
+                                        setReqError({code: Number(obj?.status), message: obj?.body.message});
+                                        return;
+                                    }
+                                    else {
+                                        //success! refresh list
+                                        updateRemindersCallback(obj.body);
+                                        //refreshList();
+                                        onShow();
+
+                                        setName("");
+                                        setDue(0);
+                                        setImportance(0);
+                                        setKey(0);
+                                    }
+                                });
+                            //console.log(reqResult);
+
+                            //if reqResult OK, continue otherwise halt-----
                             
                             //reset
-                            setName("");
-                            setDue(0);
-                            setImportance(0);
-                            setKey(0);
+                            //setName("");
+                            //setDue(0);
+                            //setImportance(0);
+                            //setKey(0);
 
-                            onShow();
+                            //onShow();
 
                             //change seed (state) of reminder list so that it refreshes and includes new reminder
-                            refreshList();
+
+                            //refreshList();
 
                             //reload page to upate list
-                            window.location.reload();
+                            //window.location.reload();
                         }}>submit</button>
 
                     </div>
@@ -162,6 +217,14 @@ const Projects = () => {
         getData();
     },[]);
 
+    const makeReminders = (reminders:any) => {
+        return (
+            <>
+                {reminders.map((reminder:any) => <div key={reminder._id}><ReminderTemplate reminder={reminder}></ReminderTemplate></div>)}
+            </>
+        )
+    }
+
     /*
     const thisProj = {
         name:"This website!",
@@ -192,6 +255,10 @@ const Projects = () => {
         setSeed(Math.random());
     }
 
+    const handleReminderUpdateCallback = (reminders:any) => {
+        setReminders(reminders);
+    }
+
     return(
         <>
         <div className={"relative flex flex-col min-h-screen overflow-hidden"}>
@@ -200,13 +267,13 @@ const Projects = () => {
             <p className="text-purple-400 font-bold text-3xl">Reminderz <button className="text-green-400" onClick={() => setIsActive(!isActive)}>&#40;+Add&#41;</button></p>
             <div key={seed} className={"flex flex-row flex-grow flex-wrap min-h-fit text-white font-bold gap-y-5 mt-5 mb-5"}>
                 {/*<ReminderTemplate reminder={someReminder}/>*/}
-                {reminders ? (
+                {reminders.length ? (
                     <>
-                        {reminders.map(reminder => <div key={reminder._id}><ReminderTemplate reminder={reminder}></ReminderTemplate></div>)}
+                        {makeReminders(reminders)}
                     </>
-                ) : (<p>NO REMINDERS</p>)}
+                ) : (<p className="text-red-400 text-lg">NO REMINDERS</p>)}
             </div>
-            <AddRemindUI isActive={isActive} onShow={() => setIsActive(!isActive)} refreshList={() => refreshFetch()}></AddRemindUI>
+            <AddRemindUI isActive={isActive} onShow={() => setIsActive(!isActive)} refreshList={() => refreshFetch()} updateRemindersCallback={handleReminderUpdateCallback}></AddRemindUI>
         </div>
         </>
     )

@@ -18,7 +18,7 @@ export default async function RemindAPIReq(req:any, res:any) {
         */
 
         //delete!!!
-        //const result = await coll.deleteMany({name: "TESTINSERT"})
+        //const deleteaaa = await coll.deleteMany({});
 
         if (req.method == "POST") {
             //POST request, push to database
@@ -27,14 +27,32 @@ export default async function RemindAPIReq(req:any, res:any) {
             if (!req.body.key || String(req.body.key) != String(process.env.DB_CODE)) {
                 console.log("incorrect db_key");
                 console.log(process.env.DB_CODE);
-                res.json({"error":"abort! invalid db_code"});
-                return;
+                return res.status(401).send({
+                    message: "Error: wrong password!"
+                })
             }
 
             //check if data is valid
-            if (req.body.reminder == "" || typeof req.body.due != "number" || typeof req.body.importance != "number") {
+            if (req.body.name == "" || typeof req.body.due != "number" || typeof req.body.importance != "number") {
                 console.log("invalid request");
-                res.json({"error":"abort! invalid name, due date, or importance"});
+                return res.status(400).send({
+                    message: "Error: malformed request!"
+                })
+            }
+
+            //check if pushing to db or request to delete from db
+            if (req.body.reqType == "delete") {
+                //delete
+                try {
+                    const result = await coll.deleteOne({_id:req.body._id});
+
+                    //return success
+                    res.json({"success":`${req.body.name} has been deleted`});
+                }
+                catch (e) {
+                    res.json({"error":`${e}`});
+                }
+
                 return;
             }
 
@@ -47,12 +65,12 @@ export default async function RemindAPIReq(req:any, res:any) {
             }
 
             const result = await coll.insertOne(doc);
-            console.log(result.insertedId);
+            //console.log(result.insertedId);
 
             //fetch new reminder list and return to client
             const reminders = await coll
                 .find({})
-                .sort({due: -1})
+                .sort({importance: -1})
                 //.limit(20)
                 .toArray();
 
@@ -63,7 +81,7 @@ export default async function RemindAPIReq(req:any, res:any) {
             //get reminders
             const reminders = await coll
                 .find({})
-                .sort({due: -1})
+                .sort({importance: -1})
                 //.limit(20)
                 .toArray();
             
