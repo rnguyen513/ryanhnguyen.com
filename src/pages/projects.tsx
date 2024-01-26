@@ -63,9 +63,11 @@ const Projects = () => {
         <div className={"relative flex flex-col min-h-screen overflow-hidden"}>
             <Header></Header>
             <Background></Background>
-            <div className={"flex flex-col flex-grow min-h-fit justify-center items-center text-white font-bold gap-y-5 mt-5 mb-5"}>
-                <ProjTemplate _proj={thisProj}/>
-                <p>Following projects were dumped via GITHUB API from an account I can&apos;t access anymore...can&apos;t change the names for now sorry...</p>
+            <div className="flex flex-col items-center text-white font-bold mt-5 mb-5">
+                <ProjTemplate _proj={thisProj}></ProjTemplate>
+                <p className="mt-2 px-5">Following projects were dumped via GITHUB API from an account I can&apos;t access anymore...can&apos;t change the names for now sorry...</p>
+            </div>
+            <div className={"flex flex-row flex-wrap justify-between items-center min-h-fit text-white font-bold gap-y-5 mb-5 ml-2 mr-2"}>
                 {projects.map(project => <div key={project.name}><ProjTemplate _proj={project}></ProjTemplate></div>)}
             </div>
         </div>

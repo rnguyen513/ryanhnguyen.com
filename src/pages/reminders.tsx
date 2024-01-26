@@ -2,6 +2,7 @@ import { createRef, useRef, useEffect, useState } from "react"
 import Background from "./components/background"
 import Header from "./components/header"
 import { ProgressBar } from "react-bootstrap"
+import RemindAPIReq from "./api/remindersapi"
 
 export type reminder = {
     _id: string,
@@ -210,8 +211,9 @@ export function AddRemindUI({isActive, onShow, refreshList, updateRemindersCallb
 //https://raw.githubusercontent.com/ryangu23/gmailnoti/main/README.md
 //https://raw.githubusercontent.com/{user}/{repo}/{branch}/README.md
 
-const Projects = () => {
+const Reminderz = () => {
 
+    /*
     const [reminders, setReminders] = useState([
         {_id: "[_id] 65ac578e01ed29334b261402",
         name: "[name] eggs",
@@ -220,10 +222,12 @@ const Projects = () => {
         due: 1705793426199,
         importance: 10}
     ]);
+    */
+
+    const [reminders, setReminders] = useState([]);
 
     useEffect(() => {
         const getData = async () => {
-            
             const query = await fetch("../api/remindersapi");
             const response = await query.json();
             setReminders(response);
@@ -279,7 +283,7 @@ const Projects = () => {
             <Header></Header>
             <Background></Background>
             <p className="text-purple-400 font-bold text-3xl ml-2">Reminderz <button className="text-green-400" onClick={() => setIsActive(!isActive)}>&#40;+Add&#41;</button></p>
-            <div key={seed} className={"flex flex-row flex-grow flex-wrap min-h-fit text-white font-bold gap-y-5 ml-2 mt-2 mb-5"}>
+            <div key={seed} className={"flex flex-row flex-grow flex-wrap justify-between min-h-fit text-white font-bold gap-y-5 ml-2 mt-2 mb-5"}>
                 {/*<ReminderTemplate reminder={someReminder}/>*/}
                 {reminders.length ? (
                     <>
@@ -293,4 +297,10 @@ const Projects = () => {
     )
 }
 
-export default Projects
+/*
+export const getServerSideProps = async () => {
+    const reminders = await RemindAPIReq({method:"GET"},{});
+}
+*/
+
+export default Reminderz;

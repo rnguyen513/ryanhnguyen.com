@@ -55,38 +55,28 @@ export default async function RemindAPIReq(req:any, res:any) {
 
                 return;
             }
-
-            const doc = {
-                name: req.body.name,
-                author: "Ryan Nguyen",
-                created: Date.now(),
-                due: req.body.due+104340000,
-                importance: req.body.importance
+            else {
+                //insert NOT delete
+                const doc = {
+                    name: req.body.name,
+                    author: "Ryan Nguyen",
+                    created: Date.now(),
+                    due: req.body.due+104340000,
+                    importance: req.body.importance
+                }
+    
+                const result = await coll.insertOne(doc);
+                //console.log(result.insertedId);
             }
-
-            const result = await coll.insertOne(doc);
-            //console.log(result.insertedId);
-
-            //fetch new reminder list and return to client
-            const reminders = await coll
-                .find({})
-                .sort({importance: -1})
-                //.limit(20)
-                .toArray();
-
-            res.json(reminders)
         }
-        else {
-            //GET request, so only fetch and return reminders
-            //get reminders
-            const reminders = await coll
-                .find({})
-                .sort({importance: -1})
-                //.limit(20)
-                .toArray();
-            
-            res.json(reminders);
-        }
+
+        //regardless if POST or GET, always return updated list
+        const reminders = await coll
+            .find({})
+            .sort({importance: -1})
+            .toArray();
+
+        res.json(reminders);
     }
     catch (e) {
         console.error(e);
