@@ -1,4 +1,5 @@
 import clientPromise from "../../../lib/mongodb";
+import { ObjectId } from "mongodb";
 
 export default async function RemindAPIReq(req:any, res:any) {
     try {
@@ -41,21 +42,20 @@ export default async function RemindAPIReq(req:any, res:any) {
             }
 
             //check if pushing to db or request to delete from db
-            if (req.body.reqType == "delete") {
+            if (req.body.reqType == "DELETE") {
                 //delete
                 try {
-                    const result = await coll.deleteOne({_id:req.body._id});
+                    //console.log(req.body._id);
+                    const result = await coll.deleteOne({_id: new ObjectId(req.body._id)});
 
                     //return success
-                    res.json({"success":`${req.body.name} has been deleted`});
+                    //res.json({"success":`${req.body.name} has been deleted`});
                 }
                 catch (e) {
                     res.json({"error":`${e}`});
                 }
-
-                return;
             }
-            else {
+            else if (req.body.reqType == "PUSH") {
                 //insert NOT delete
                 const doc = {
                     name: req.body.name,
