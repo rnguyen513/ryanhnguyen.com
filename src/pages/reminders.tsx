@@ -57,7 +57,7 @@ const ReminderTemplate = ({reminder, showDeleteUI}:any) => {
     )
 }
 
-export const handleSubmit = async ({_reminder, _due, _importance, _key, _reqType, __id}:any) => {
+export const handleSubmit = async ({_reminder, _due, _importance, _key, _reqType, __id, _created}:any) => {
     try {
         //post request
         const request = await fetch("../api/remindersapi", {
@@ -71,7 +71,8 @@ export const handleSubmit = async ({_reminder, _due, _importance, _key, _reqType
                 importance: _importance,
                 key: _key,
                 reqType: _reqType,
-                _id: __id
+                _id: __id,
+                created: _created
             })
         });
 
@@ -266,7 +267,7 @@ export function AddDeleteUI({isActive, onShow, updateRemindersCallback, reminder
 
                             //at this point, request should be valid (hopefully)
                             //post to database
-                            const reqResult = handleSubmit({_reminder: reminder.name, _due: reminder.due, _importance: reminder.importance, _key: key, _reqType: "DELETE", __id: reminder._id})
+                            const reqResult = handleSubmit({_reminder: reminder.name, _due: reminder.due, _importance: reminder.importance, _key: key, _reqType: "DELETE", __id: reminder._id, _created: reminder.created})
                                 .then(res => res?.json()
                                     .then(data => ({status: res.status, body: data})))
                                 .then(obj => {

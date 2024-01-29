@@ -6,6 +6,7 @@ export default async function RemindAPIReq(req:any, res:any) {
         const client = await clientPromise;
         const db = client.db("live_rnguyencom");
         const coll = db.collection("reminders");
+        const history = db.collection("history");
 
         /* insert
         const doc = {name: "TESTINSERT",
@@ -46,6 +47,17 @@ export default async function RemindAPIReq(req:any, res:any) {
                 //delete
                 try {
                     //console.log(req.body._id);
+
+                    const duplicateDoc = {
+                        name: req.body.name,
+                        author: "Ryan Nguyen",
+                        created: req.body.created,
+                        due: req.body.due+104340000,
+                        importance: req.body.importance,
+                        _id: new ObjectId(req.body._id)
+                    }
+
+                    const duplicate = await history.insertOne(duplicateDoc);
                     const result = await coll.deleteOne({_id: new ObjectId(req.body._id)});
 
                     //return success
