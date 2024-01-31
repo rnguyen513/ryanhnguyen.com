@@ -113,7 +113,7 @@ export function AddRemindUI({isActive, onShow, updateRemindersCallback}:any) {
     return(
         <>
         {isActive ? (
-            <div className="absolute h-4/5 w-3/5 left-20 top-20 bg-purple-100 ring-1 ring-gray-300/10 rounded-lg shadow-lg shadow-white/10 font-bold">
+            <div className="absolute h-4/5 w-3/5 left-20 top-20 bg-gray-200 ring-4 ring-black rounded-lg shadow-lg shadow-white/10 font-bold">
                 <div className="flex flex-col items-center justify-around h-full rounded-lg text-black">
                     <h1 className="text-blue-400 text-3xl">Add remind</h1>
                     <input type="text" placeholder="reminder" onChange={(e) => checkFieldValid({fieldValue:e.target.value,fieldType:"string",fieldStateSetter:setName})}></input>
@@ -233,7 +233,7 @@ export function AddDeleteUI({isActive, onShow, updateRemindersCallback, reminder
     return(
         <>
         {isActive ? (
-            <div className="absolute h-4/5 w-3/5 left-20 top-20 bg-white ring-1 ring-gray-300/10 rounded-lg shadow-lg shadow-white/10 font-bold">
+            <div className="absolute h-4/5 w-3/5 left-20 top-20 bg-white ring-4 ring-gray-300/10 rounded-lg shadow-lg shadow-white/10 font-bold">
                 <div className="flex flex-col items-center justify-around h-full rounded-lg text-black">
                     <h1 className="text-red-400 text-3xl">delete {reminder.name}</h1>
 
@@ -284,7 +284,7 @@ export function AddDeleteUI({isActive, onShow, updateRemindersCallback, reminder
                                         onShow();
                                     }
                                 });
-                        }}>submit</button>
+                        }}>delete!</button>
 
                     </div>
                 </div>
@@ -297,7 +297,7 @@ export function AddDeleteUI({isActive, onShow, updateRemindersCallback, reminder
 //https://raw.githubusercontent.com/ryangu23/gmailnoti/main/README.md
 //https://raw.githubusercontent.com/{user}/{repo}/{branch}/README.md
 
-const Reminderz = () => {
+const Reminderz = ({_reminders}:any) => {
 
     /*
     const [reminders, setReminders] = useState([
@@ -310,7 +310,7 @@ const Reminderz = () => {
     ]);
     */
 
-    const [reminders, setReminders] = useState([]);
+    const [reminders, setReminders] = useState(_reminders);
 
     useEffect(() => {
         const getData = async () => {
@@ -388,10 +388,18 @@ const Reminderz = () => {
     )
 }
 
-/*
 export const getServerSideProps = async () => {
-    const reminders = await RemindAPIReq({method:"GET"},{});
+
+    //fix if have time
+    let re: any[] = [];
+    const request = await fetch("https://www.r-nguyen.com/api/remindersapi").then(data => data.json()).then(rem => {
+        //console.log(rem);
+        re = rem;
+    });
+
+    return {
+        props: {_reminders:JSON.parse(JSON.stringify(re))}
+    };
 }
-*/
 
 export default Reminderz;

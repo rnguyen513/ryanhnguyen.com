@@ -31,7 +31,7 @@ export default async function RemindAPIReq(req:any, res:any) {
                 console.log(process.env.DB_CODE);
                 return res.status(401).send({
                     message: "Error: wrong password!"
-                })
+                });
             }
 
             //check if data is valid
@@ -39,7 +39,7 @@ export default async function RemindAPIReq(req:any, res:any) {
                 console.log("invalid request");
                 return res.status(400).send({
                     message: "Error: malformed request!"
-                })
+                });
             }
 
             //check if pushing to db or request to delete from db
