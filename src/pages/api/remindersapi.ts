@@ -28,7 +28,7 @@ export default async function RemindAPIReq(req:any, res:any) {
             //check if user has access
             if (!req.body.key || String(req.body.key) != String(process.env.DB_CODE)) {
                 console.log("incorrect db_key");
-                console.log(process.env.DB_CODE);
+                //console.log(process.env.DB_CODE);
                 return res.status(401).send({
                     message: "Error: wrong password!"
                 });
@@ -54,6 +54,7 @@ export default async function RemindAPIReq(req:any, res:any) {
                         created: req.body.created,
                         due: req.body.due+104340000,
                         importance: req.body.importance,
+                        color: req.body.color,
                         _id: new ObjectId(req.body._id)
                     }
 
@@ -74,7 +75,8 @@ export default async function RemindAPIReq(req:any, res:any) {
                     author: "Ryan Nguyen",
                     created: Date.now(),
                     due: req.body.due+104340000,
-                    importance: req.body.importance
+                    importance: req.body.importance,
+                    color: req.body.color
                 }
     
                 const result = await coll.insertOne(doc);

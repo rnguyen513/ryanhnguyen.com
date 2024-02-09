@@ -45,7 +45,7 @@ const ReminderTemplate = ({reminder, showDeleteUI}:any) => {
 
     return(
         <a className={"group relative flex flex-col ring-1 ring-gray-300/10 shadow-lg shadow-white/10 py-2 px-4 flex-col bg-gray-100/5 rounded-lg mr-2"}>
-            <button className={"text-4xl hover:text-red-400 mb-2"} onClick={() => showDeleteUI([true, reminder._id])}>{reminder.name}</button>
+            <button style={{backgroundColor: `${(reminder.color != "#FF0000" && reminder.color != null) ? (reminder.color) : ("")}`}} className={`text-4xl hover:text-red-400 mb-2 rounded-lg p-1`} onClick={() => showDeleteUI([true, reminder._id])}>{reminder.name}</button>
             <p>{reminder.author}</p>
             <p className={"text-yellow-200"}>Importance: {reminder.importance}</p>
             <p className={"text-red-300"}>Due: {toDateTime(parseInt(reminder.due))}</p>
@@ -57,7 +57,7 @@ const ReminderTemplate = ({reminder, showDeleteUI}:any) => {
     )
 }
 
-export const handleSubmit = async ({_reminder, _due, _importance, _key, _reqType, __id, _created}:any) => {
+export const handleSubmit = async ({_reminder, _due, _importance, _key, _color, _reqType, __id, _created}:any) => {
     try {
         //post request
         const request = await fetch("../api/remindersapi", {
@@ -70,6 +70,7 @@ export const handleSubmit = async ({_reminder, _due, _importance, _key, _reqType
                 due: _due,
                 importance: _importance,
                 key: _key,
+                color: _color,
                 reqType: _reqType,
                 _id: __id,
                 created: _created
@@ -79,7 +80,7 @@ export const handleSubmit = async ({_reminder, _due, _importance, _key, _reqType
         if (request.ok) {/*console.log(_reqType, _reminder)*/}
         else console.log("error: failed to", _reqType, _reminder);
 
-        return request
+        return request;
     }
     catch (e) {
         return console.error("POST ERROR", e);
@@ -92,13 +93,14 @@ export function AddRemindUI({isActive, onShow, updateRemindersCallback}:any) {
     const [due, setDue] = useState(0);
     const [importance, setImportance] = useState(0);
     const [key, setKey] = useState(0);
+    const [color, setColor] = useState("#FF0000");
 
     const [allValid, setAllValid] = useState(true);
 
     const checkFieldValid = ({fieldValue, fieldType, fieldStateSetter}:any) => {
         setReqError({code:0,message:""});
         if (fieldValue.length != "" && typeof fieldValue == fieldType) {fieldStateSetter(fieldValue);return true;}
-        else {console.log("errors in input");setAllValid(false);return false}
+        else {console.log("errors in input, got", fieldValue, "for", fieldType);setAllValid(false);return false}
     }
 
     const [reqError, setReqError] = useState({code:0,message:""});
@@ -123,6 +125,10 @@ export function AddRemindUI({isActive, onShow, updateRemindersCallback}:any) {
                     </div>
                     <input type="number" placeholder="importance" onChange={(e) => checkFieldValid({fieldValue:Number(e.target.value),fieldType:"number",fieldStateSetter:setImportance})}></input>
                     <input type="number" placeholder="password" onChange={(e) => {checkFieldValid({fieldValue:Number(e.target.value),fieldType:"number",fieldStateSetter:setKey})}}></input>
+                    <div className="">
+                        <p>color &#40;optional&#41;: </p>
+                        <input type="color" onChange={(e) => checkFieldValid({fieldValue:e.target.value,fieldType:"string",fieldStateSetter:setColor})}></input>
+                    </div>
 
                     {/*if error from user/server*/}
                     {(!allValid || reqError.code) ? (
@@ -143,6 +149,7 @@ export function AddRemindUI({isActive, onShow, updateRemindersCallback}:any) {
                             setDue(0);
                             setImportance(0);
                             setKey(0);
+                            setColor("#FF0000");
 
                         }}>close</button>
 
@@ -155,12 +162,13 @@ export function AddRemindUI({isActive, onShow, updateRemindersCallback}:any) {
                                 !checkFieldValid({fieldValue:name,fieldType:"string",fieldStateSetter:setName}) ||
                                 !checkFieldValid({fieldValue:due,fieldType:"number",fieldStateSetter:setDue}) ||
                                 !checkFieldValid({fieldValue:importance,fieldType:"number",fieldStateSetter:setImportance}) ||
-                                !checkFieldValid({fieldValue:key,fieldType:"number",fieldStateSetter:setKey})
+                                !checkFieldValid({fieldValue:key,fieldType:"number",fieldStateSetter:setKey}) ||
+                                !checkFieldValid({fieldValue:color,fieldType:"string",fieldStateSetter:setColor})
                             ) {return}
 
                             //at this point, request should be valid (hopefully)
                             //post to database
-                            const reqResult = handleSubmit({_reminder: name, _due: due, _importance: importance, _key: key, _reqType: "PUSH"})
+                            const reqResult = handleSubmit({_reminder: name, _due: due, _importance: importance, _key: key, _color: color, _reqType: "PUSH"})
                                 .then(res => res?.json()
                                     .then(data => ({status: res.status, body: data})))
                                 .then(obj => {
@@ -179,6 +187,7 @@ export function AddRemindUI({isActive, onShow, updateRemindersCallback}:any) {
                                         setDue(0);
                                         setImportance(0);
                                         setKey(0);
+                                        setColor("#FF0000");
                                     }
                                 });
                             //console.log(reqResult);
@@ -312,14 +321,14 @@ const Reminderz = ({_reminders}:any) => {
 
     const [reminders, setReminders] = useState(_reminders);
 
-    useEffect(() => {
-        const getData = async () => {
-            const query = await fetch("../api/remindersapi");
-            const response = await query.json();
-            setReminders(response);
-        }
-        getData();
-    },[]);
+    // useEffect(() => {
+    //     const getData = async () => {
+    //         const query = await fetch("../api/remindersapi");
+    //         const response = await query.json();
+    //         setReminders(response);
+    //     }
+    //     getData();
+    // },[]);
 
     const makeReminders = ({reminders, showDeleteUI}:any) => {
         return (
