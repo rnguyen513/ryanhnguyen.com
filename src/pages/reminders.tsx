@@ -1,7 +1,8 @@
-import { createRef, useRef, useEffect, useState } from "react"
-import Background from "./components/background"
-import Header from "./components/header"
-import { Progressbar } from "./components/progressbar"
+import { createRef, useRef, useEffect, useState } from "react";
+import Background from "./components/background";
+import Header from "./components/header";
+import { Progressbar } from "./components/progressbar";
+import Head from "next/head";
 
 import {useSession, signIn, signOut} from "next-auth/react";
 
@@ -57,7 +58,7 @@ const ReminderTemplate = ({reminder, showDeleteUI}:any) => {
     )
 }
 
-export const handleSubmit = async ({_reminder, _due, _importance, _key, _color, _author, _reqType, __id, _created}:any) => {
+export const handleSubmit = async ({_reminder, _due, _importance, _key, _color, _author, _authorEmail, _reqType, __id, _created}:any) => {
     try {
         //post request
         const request = await fetch("../api/remindersapi", {
@@ -72,6 +73,7 @@ export const handleSubmit = async ({_reminder, _due, _importance, _key, _color, 
                 key: _key,
                 color: _color,
                 author: _author,
+                authorEmail: _authorEmail,
                 reqType: _reqType,
                 _id: __id,
                 created: _created
@@ -118,32 +120,108 @@ export function AddRemindUI({isActive, onShow, updateRemindersCallback}:any) {
     return(
         <>
         {isActive ? (
-            <div className="absolute h-4/5 w-3/5 left-20 top-20 bg-gray-200 ring-4 ring-black rounded-lg shadow-lg shadow-white/10 font-bold">
-                <div className="flex flex-col items-center justify-around h-full rounded-lg text-black">
-                    <h1 className="text-blue-400 text-3xl">Add remind</h1>
-                    <p>author: {data?.user?.name}, {data?.user?.email}</p>
-                    <input type="text" placeholder="reminder" onChange={(e) => checkFieldValid({fieldValue:e.target.value,fieldType:"string",fieldStateSetter:setName})}></input>
-                    <div>
-                        <p>due</p>
-                        <input type="date" placeholder="05/06/2024" onChange={(e) => checkFieldValid({fieldValue:toUnix(e.target.value),fieldType:"number",fieldStateSetter:setDue})}></input>
-                    </div>
-                    <input type="number" placeholder="importance" onChange={(e) => checkFieldValid({fieldValue:Number(e.target.value),fieldType:"number",fieldStateSetter:setImportance})}></input>
-                    <input type="number" placeholder="password" onChange={(e) => {checkFieldValid({fieldValue:Number(e.target.value),fieldType:"number",fieldStateSetter:setKey})}}></input>
-                    <div className="flex-row">
-                        <p>color &#40;optional&#41;:</p>
-                        <input type="color" onChange={(e) => checkFieldValid({fieldValue:e.target.value,fieldType:"string",fieldStateSetter:setColor})}></input>
-                    </div>
-
-                    {/*if error from user/server*/}
-                    {(!allValid || reqError.code) ? (
-                        <div className="px-5">
-                            {allValid ? (null) : (<p className="text-red-400 font-bold text-xl">INVALID! cancel and try again...</p>)}
-                            {reqError.code ? (<p>{showError(reqError.message)}</p>) : (null)}
+            <div className="absolute h-80 w-3/5 left-20 top-20 bg-gray-200 ring-4 ring-black rounded-lg shadow-lg shadow-white/10 font-bold">
+                {status == "authenticated" ? (
+                    <div className="flex flex-col items-center justify-around h-full rounded-lg text-black">
+                        <h1 className="text-blue-400 text-3xl">Add remind</h1>
+                        <p>author: {data?.user?.name}, {data?.user?.email}</p>
+                        <input type="text" placeholder="reminder" onChange={(e) => checkFieldValid({fieldValue:e.target.value,fieldType:"string",fieldStateSetter:setName})}></input>
+                        <div>
+                            <p>due</p>
+                            <input type="date" placeholder="05/06/2024" onChange={(e) => checkFieldValid({fieldValue:toUnix(e.target.value),fieldType:"number",fieldStateSetter:setDue})}></input>
                         </div>
-                    ) : (null)}
+                        <input type="number" placeholder="importance" onChange={(e) => checkFieldValid({fieldValue:Number(e.target.value),fieldType:"number",fieldStateSetter:setImportance})}></input>
+                        {/*<input type="number" placeholder="password" onChange={(e) => {checkFieldValid({fieldValue:Number(e.target.value),fieldType:"number",fieldStateSetter:setKey})}}></input>*/}
+                        <div className="flex-row">
+                            <p>color &#40;optional&#41;:</p>
+                            <input type="color" onChange={(e) => checkFieldValid({fieldValue:e.target.value,fieldType:"string",fieldStateSetter:setColor})}></input>
+                        </div>
 
-                    <div className="flex-row">
-                        {/*close button*/}
+                        {/*if error from user/server*/}
+                        {(!allValid || reqError.code) ? (
+                            <div className="px-5">
+                                {allValid ? (null) : (<p className="text-red-400 font-bold text-xl">INVALID! cancel and try again...</p>)}
+                                {reqError.code ? (<p>{showError(reqError.message)}</p>) : (null)}
+                            </div>
+                        ) : (null)}
+
+                        <div className="flex-row">
+                            {/*close button*/}
+                            <button className="absolute top-5 right-3 ring-1 ring-black rounded-lg p-3 mr-3 bg-red-200" onClick={() => {
+                                onShow();
+                                setAllValid(true);
+
+                                //reset
+                                setName("");
+                                setDue(0);
+                                setImportance(0);
+                                setKey(0);
+                                setColor("#FF0000");
+                                console.log(data);
+                            }}>close</button>
+
+                            {/*submit button*/}
+                            <button className="ring-1 ring-black rounded-lg p-3 bg-green-200" onClick={() => {
+                                if (!allValid) {console.log("one or more fields invalid, aborting");return;}
+
+                                //recheck
+                                if (
+                                    !checkFieldValid({fieldValue:name,fieldType:"string",fieldStateSetter:setName}) ||
+                                    !checkFieldValid({fieldValue:due,fieldType:"number",fieldStateSetter:setDue}) ||
+                                    !checkFieldValid({fieldValue:importance,fieldType:"number",fieldStateSetter:setImportance}) ||
+                                    /*!checkFieldValid({fieldValue:key,fieldType:"number",fieldStateSetter:setKey}) ||*/
+                                    !checkFieldValid({fieldValue:color,fieldType:"string",fieldStateSetter:setColor})
+                                ) {return}
+
+                                //at this point, request should be valid (hopefully)
+                                //post to database
+                                const reqResult = handleSubmit({_reminder: name, _due: due, _importance: importance, _key: key, _color: color, _author: data?.user?.name, _authorEmail: data?.user?.email, _reqType: "PUSH"})
+                                    .then(res => res?.json()
+                                        .then(data => ({status: res.status, body: data})))
+                                    .then(obj => {
+                                        console.log("response from server:", obj);
+                                        if (obj?.status != 200) {
+                                            setReqError({code: Number(obj?.status), message: obj?.body.message});
+                                            return;
+                                        }
+                                        else {
+                                            //success! refresh list
+                                            updateRemindersCallback(obj.body);
+                                            //refreshList();
+                                            onShow();
+
+                                            setName("");
+                                            setDue(0);
+                                            setImportance(0);
+                                            setKey(0);
+                                            setColor("#FF0000");
+                                        }
+                                    });
+                                //console.log(reqResult);
+
+                                //if reqResult OK, continue otherwise halt-----
+                                
+                                //reset
+                                //setName("");
+                                //setDue(0);
+                                //setImportance(0);
+                                //setKey(0);
+
+                                //onShow();
+
+                                //change seed (state) of reminder list so that it refreshes and includes new reminder
+
+                                //refreshList();
+
+                                //reload page to upate list
+                                //window.location.reload();
+                            }}>submit</button>
+
+                        </div>
+                    </div>
+                ) : (
+                    <>
+                        <p className="text-black font-bold p-5">sign in to add!</p>
                         <button className="absolute top-5 right-3 ring-1 ring-black rounded-lg p-3 mr-3 bg-red-200" onClick={() => {
                             onShow();
                             setAllValid(true);
@@ -155,66 +233,8 @@ export function AddRemindUI({isActive, onShow, updateRemindersCallback}:any) {
                             setKey(0);
                             setColor("#FF0000");
                         }}>close</button>
-
-                        {/*submit button*/}
-                        <button className="ring-1 ring-black rounded-lg p-3 bg-green-200" onClick={() => {
-                            if (!allValid) {console.log("one or more fields invalid, aborting");return;}
-
-                            //recheck
-                            if (
-                                !checkFieldValid({fieldValue:name,fieldType:"string",fieldStateSetter:setName}) ||
-                                !checkFieldValid({fieldValue:due,fieldType:"number",fieldStateSetter:setDue}) ||
-                                !checkFieldValid({fieldValue:importance,fieldType:"number",fieldStateSetter:setImportance}) ||
-                                !checkFieldValid({fieldValue:key,fieldType:"number",fieldStateSetter:setKey}) ||
-                                !checkFieldValid({fieldValue:color,fieldType:"string",fieldStateSetter:setColor})
-                            ) {return}
-
-                            //at this point, request should be valid (hopefully)
-                            //post to database
-                            const reqResult = handleSubmit({_reminder: name, _due: due, _importance: importance, _key: key, _color: color, _author: data?.user?.name, _reqType: "PUSH"})
-                                .then(res => res?.json()
-                                    .then(data => ({status: res.status, body: data})))
-                                .then(obj => {
-                                    console.log("response from server:", obj);
-                                    if (obj?.status != 200) {
-                                        setReqError({code: Number(obj?.status), message: obj?.body.message});
-                                        return;
-                                    }
-                                    else {
-                                        //success! refresh list
-                                        updateRemindersCallback(obj.body);
-                                        //refreshList();
-                                        onShow();
-
-                                        setName("");
-                                        setDue(0);
-                                        setImportance(0);
-                                        setKey(0);
-                                        setColor("#FF0000");
-                                    }
-                                });
-                            //console.log(reqResult);
-
-                            //if reqResult OK, continue otherwise halt-----
-                            
-                            //reset
-                            //setName("");
-                            //setDue(0);
-                            //setImportance(0);
-                            //setKey(0);
-
-                            //onShow();
-
-                            //change seed (state) of reminder list so that it refreshes and includes new reminder
-
-                            //refreshList();
-
-                            //reload page to upate list
-                            //window.location.reload();
-                        }}>submit</button>
-
-                    </div>
-                </div>
+                    </>
+                )}
             </div>) : (/*() => setAllValid(true) <p className="absolute left-20 text-red-400 font-bold">NOT ACTIVE</p>*/null)
         }
         </>
@@ -242,12 +262,17 @@ export function AddDeleteUI({isActive, onShow, updateRemindersCallback, reminder
         )
     }
 
+    useEffect(() => {
+        console.log("reminder to delete has changed to", reminder?.name);
+        setReqError({code:0,message:""});
+    },[reminder])
+
     const {data, status} = useSession();
 
     return(
         <>
         {isActive ? (
-            <div className="absolute h-4/5 w-3/5 left-20 top-20 bg-white ring-4 ring-gray-300/10 rounded-lg shadow-lg shadow-white/10 font-bold">
+            <div className="absolute h-80 w-3/5 left-20 top-20 bg-white ring-4 ring-gray-300/10 rounded-lg shadow-lg shadow-white/10 font-bold">
                 {status == "authenticated" ? (
                     <div className="flex flex-col items-center justify-around h-full rounded-lg text-black">
                         <h1 className="text-red-400 text-3xl">delete {reminder.name}</h1>
@@ -257,7 +282,7 @@ export function AddDeleteUI({isActive, onShow, updateRemindersCallback, reminder
                         <p>Importance: {reminder.importance}</p>
                         <p>Created: {toDateTime(reminder.created)}</p>
 
-                        <input type="number" placeholder="password" onChange={(e) => {checkFieldValid({fieldValue:Number(e.target.value),fieldType:"number",fieldStateSetter:setKey})}}></input>
+                        {/*<input type="number" placeholder="password" onChange={(e) => {checkFieldValid({fieldValue:Number(e.target.value),fieldType:"number",fieldStateSetter:setKey})}}></input>*/}
 
                         {/*if error from user/server*/}
                         {(!allValid || reqError.code) ? (
@@ -269,20 +294,26 @@ export function AddDeleteUI({isActive, onShow, updateRemindersCallback, reminder
 
                         <div className="flex-row">
                             {/*close button*/}
-                            <button className="absolute top-5 right-3 ring-1 ring-black rounded-lg p-3 mr-3 bg-red-200" onClick={onShow}>close</button>
+                            <button className="absolute top-5 right-3 ring-1 ring-black rounded-lg p-3 mr-3 bg-red-200" onClick={() => {
+                                onShow();
+                                setAllValid(true);
+                                setReqError({code: 0, message:""});
+                            }}>close</button>
 
                             {/*submit button*/}
                             <button className="ring-1 ring-black rounded-lg p-3 bg-green-200" onClick={() => {
                                 if (!allValid) {console.log("one or more fields invalid, aborting");return;}
 
                                 //recheck
+                                /*
                                 if (
                                     !checkFieldValid({fieldValue:key,fieldType:"number",fieldStateSetter:setKey})
                                 ) {return}
+                                */
 
                                 //at this point, request should be valid (hopefully)
                                 //post to database
-                                const reqResult = handleSubmit({_reminder: reminder.name, _due: reminder.due, _importance: reminder.importance, _key: key, _reqType: "DELETE", __id: reminder._id, _created: reminder.created})
+                                const reqResult = handleSubmit({_reminder: reminder.name, _due: reminder.due, _importance: reminder.importance, _key: key, _color: reminder.color, _author: reminder.author, _authorEmail: data?.user?.email, _reqType: "DELETE", __id: reminder._id, _created: reminder.created})
                                     .then(res => res?.json()
                                         .then(data => ({status: res.status, body: data})))
                                     .then(obj => {
@@ -300,13 +331,16 @@ export function AddDeleteUI({isActive, onShow, updateRemindersCallback, reminder
                                         }
                                     });
                             }}>delete!</button>
-
                         </div>
                     </div>
                 ) : (
                     <>
                         <p className="text-black font-bold p-5">sign in to delete {reminder.name}!</p>
-                        <button className="absolute top-5 right-3 ring-1 ring-black rounded-lg p-3 mr-3 bg-red-200" onClick={onShow}>close</button>
+                        <button className="absolute top-5 right-3 ring-1 ring-black rounded-lg p-3 mr-3 bg-red-200" onClick={() => {
+                            onShow();
+                            setAllValid(true);
+                            setReqError({code: 0, message:""});
+                        }}>close</button>
                     </>
                 )}
             </div>) : (null)
@@ -368,6 +402,9 @@ const Reminderz = ({_reminders}:any) => {
     return(
         <>
         <div className={"relative flex flex-col min-h-screen overflow-hidden"}>
+            <Head>
+                <title>{data?.user?.name ? (`${data.user.name}'s Reminders`) : ("Reminders")}</title>
+            </Head>
             <Header></Header>
             <Background></Background>
             <p className="text-purple-400 font-bold text-3xl ml-2">Reminderz&nbsp;
@@ -385,8 +422,8 @@ const Reminderz = ({_reminders}:any) => {
                     </>
                 ) : (<p className="text-red-400 text-lg">NO REMINDERS</p>)}
             </div>
-            <AddRemindUI isActive={isActive} onShow={() => setIsActive(!isActive)} refreshList={() => refreshFetch()} updateRemindersCallback={handleReminderUpdateCallback}></AddRemindUI>
-            <AddDeleteUI isActive={deleteIsActive[0]} onShow={() => setDeleteIsActive([false, "65b3d063030029e415df93d3"])} updateRemindersCallback={handleReminderUpdateCallback} reminder={reminders?.find((_reminder:any)=>_reminder._id==deleteIsActive[1])}></AddDeleteUI>
+            <AddRemindUI isActive={isActive} onShow={() => {setIsActive(!isActive)}} refreshList={() => refreshFetch()} updateRemindersCallback={handleReminderUpdateCallback}></AddRemindUI>
+            <AddDeleteUI isActive={deleteIsActive[0]} onShow={() => {setDeleteIsActive([false, "65b3d063030029e415df93d3"])}} updateRemindersCallback={handleReminderUpdateCallback} reminder={reminders?.find((_reminder:any)=>_reminder._id==deleteIsActive[1])}></AddDeleteUI>
         </div>
         </>
     )
