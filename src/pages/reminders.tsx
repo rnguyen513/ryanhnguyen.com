@@ -1,9 +1,9 @@
 import { createRef, useRef, useEffect, useState } from "react"
 import Background from "./components/background"
 import Header from "./components/header"
-import { ProgressBar } from "react-bootstrap"
 import { Progressbar } from "./components/progressbar"
-import RemindAPIReq from "./api/remindersapi"
+
+import {useSession, signIn, signOut} from "next-auth/react";
 
 export type reminder = {
     _id: string,
@@ -57,7 +57,7 @@ const ReminderTemplate = ({reminder, showDeleteUI}:any) => {
     )
 }
 
-export const handleSubmit = async ({_reminder, _due, _importance, _key, _color, _reqType, __id, _created}:any) => {
+export const handleSubmit = async ({_reminder, _due, _importance, _key, _color, _author, _reqType, __id, _created}:any) => {
     try {
         //post request
         const request = await fetch("../api/remindersapi", {
@@ -71,6 +71,7 @@ export const handleSubmit = async ({_reminder, _due, _importance, _key, _color, 
                 importance: _importance,
                 key: _key,
                 color: _color,
+                author: _author,
                 reqType: _reqType,
                 _id: __id,
                 created: _created
@@ -112,12 +113,15 @@ export function AddRemindUI({isActive, onShow, updateRemindersCallback}:any) {
         )
     }
 
+    const {data, status} = useSession();
+
     return(
         <>
         {isActive ? (
             <div className="absolute h-4/5 w-3/5 left-20 top-20 bg-gray-200 ring-4 ring-black rounded-lg shadow-lg shadow-white/10 font-bold">
                 <div className="flex flex-col items-center justify-around h-full rounded-lg text-black">
                     <h1 className="text-blue-400 text-3xl">Add remind</h1>
+                    <p>author: {data?.user?.name}, {data?.user?.email}</p>
                     <input type="text" placeholder="reminder" onChange={(e) => checkFieldValid({fieldValue:e.target.value,fieldType:"string",fieldStateSetter:setName})}></input>
                     <div>
                         <p>due</p>
@@ -125,8 +129,8 @@ export function AddRemindUI({isActive, onShow, updateRemindersCallback}:any) {
                     </div>
                     <input type="number" placeholder="importance" onChange={(e) => checkFieldValid({fieldValue:Number(e.target.value),fieldType:"number",fieldStateSetter:setImportance})}></input>
                     <input type="number" placeholder="password" onChange={(e) => {checkFieldValid({fieldValue:Number(e.target.value),fieldType:"number",fieldStateSetter:setKey})}}></input>
-                    <div className="">
-                        <p>color &#40;optional&#41;: </p>
+                    <div className="flex-row">
+                        <p>color &#40;optional&#41;:</p>
                         <input type="color" onChange={(e) => checkFieldValid({fieldValue:e.target.value,fieldType:"string",fieldStateSetter:setColor})}></input>
                     </div>
 
@@ -140,7 +144,7 @@ export function AddRemindUI({isActive, onShow, updateRemindersCallback}:any) {
 
                     <div className="flex-row">
                         {/*close button*/}
-                        <button className="ring-1 ring-black rounded-lg p-3 mr-3 bg-red-200" onClick={() => {
+                        <button className="absolute top-5 right-3 ring-1 ring-black rounded-lg p-3 mr-3 bg-red-200" onClick={() => {
                             onShow();
                             setAllValid(true);
 
@@ -150,7 +154,6 @@ export function AddRemindUI({isActive, onShow, updateRemindersCallback}:any) {
                             setImportance(0);
                             setKey(0);
                             setColor("#FF0000");
-
                         }}>close</button>
 
                         {/*submit button*/}
@@ -168,7 +171,7 @@ export function AddRemindUI({isActive, onShow, updateRemindersCallback}:any) {
 
                             //at this point, request should be valid (hopefully)
                             //post to database
-                            const reqResult = handleSubmit({_reminder: name, _due: due, _importance: importance, _key: key, _color: color, _reqType: "PUSH"})
+                            const reqResult = handleSubmit({_reminder: name, _due: due, _importance: importance, _key: key, _color: color, _author: data?.user?.name, _reqType: "PUSH"})
                                 .then(res => res?.json()
                                     .then(data => ({status: res.status, body: data})))
                                 .then(obj => {
@@ -239,64 +242,73 @@ export function AddDeleteUI({isActive, onShow, updateRemindersCallback, reminder
         )
     }
 
+    const {data, status} = useSession();
+
     return(
         <>
         {isActive ? (
             <div className="absolute h-4/5 w-3/5 left-20 top-20 bg-white ring-4 ring-gray-300/10 rounded-lg shadow-lg shadow-white/10 font-bold">
-                <div className="flex flex-col items-center justify-around h-full rounded-lg text-black">
-                    <h1 className="text-red-400 text-3xl">delete {reminder.name}</h1>
+                {status == "authenticated" ? (
+                    <div className="flex flex-col items-center justify-around h-full rounded-lg text-black">
+                        <h1 className="text-red-400 text-3xl">delete {reminder.name}</h1>
 
-                    <p>_id: {reminder._id}</p>
-                    <p>Due: {toDateTime(reminder.due)}</p>
-                    <p>Importance: {reminder.importance}</p>
-                    <p>Created: {toDateTime(reminder.created)}</p>
+                        <p>_id: {reminder._id}</p>
+                        <p>Due: {toDateTime(reminder.due)}</p>
+                        <p>Importance: {reminder.importance}</p>
+                        <p>Created: {toDateTime(reminder.created)}</p>
 
-                    <input type="number" placeholder="password" onChange={(e) => {checkFieldValid({fieldValue:Number(e.target.value),fieldType:"number",fieldStateSetter:setKey})}}></input>
+                        <input type="number" placeholder="password" onChange={(e) => {checkFieldValid({fieldValue:Number(e.target.value),fieldType:"number",fieldStateSetter:setKey})}}></input>
 
-                    {/*if error from user/server*/}
-                    {(!allValid || reqError.code) ? (
-                        <div className="px-5">
-                            {allValid ? (null) : (<p className="text-red-400 font-bold text-xl">INVALID! cancel and try again...</p>)}
-                            {reqError.code ? (<p>{showError(reqError.message)}</p>) : (null)}
+                        {/*if error from user/server*/}
+                        {(!allValid || reqError.code) ? (
+                            <div className="px-5">
+                                {allValid ? (null) : (<p className="text-red-400 font-bold text-xl">INVALID! cancel and try again...</p>)}
+                                {reqError.code ? (<p>{showError(reqError.message)}</p>) : (null)}
+                            </div>
+                        ) : (null)}
+
+                        <div className="flex-row">
+                            {/*close button*/}
+                            <button className="absolute top-5 right-3 ring-1 ring-black rounded-lg p-3 mr-3 bg-red-200" onClick={onShow}>close</button>
+
+                            {/*submit button*/}
+                            <button className="ring-1 ring-black rounded-lg p-3 bg-green-200" onClick={() => {
+                                if (!allValid) {console.log("one or more fields invalid, aborting");return;}
+
+                                //recheck
+                                if (
+                                    !checkFieldValid({fieldValue:key,fieldType:"number",fieldStateSetter:setKey})
+                                ) {return}
+
+                                //at this point, request should be valid (hopefully)
+                                //post to database
+                                const reqResult = handleSubmit({_reminder: reminder.name, _due: reminder.due, _importance: reminder.importance, _key: key, _reqType: "DELETE", __id: reminder._id, _created: reminder.created})
+                                    .then(res => res?.json()
+                                        .then(data => ({status: res.status, body: data})))
+                                    .then(obj => {
+                                        console.log("response from server:", obj);
+                                        if (obj?.status != 200) {
+                                            setReqError({code: Number(obj?.status), message: obj?.body.message});
+                                            return;
+                                        }
+                                        else {
+                                            //success! refresh list
+                                            updateRemindersCallback(obj.body);
+
+                                            //close UI
+                                            onShow();
+                                        }
+                                    });
+                            }}>delete!</button>
+
                         </div>
-                    ) : (null)}
-
-                    <div className="flex-row">
-                        {/*close button*/}
-                        <button className="ring-1 ring-black rounded-lg p-3 mr-3 bg-red-200" onClick={onShow}>close</button>
-
-                        {/*submit button*/}
-                        <button className="ring-1 ring-black rounded-lg p-3 bg-green-200" onClick={() => {
-                            if (!allValid) {console.log("one or more fields invalid, aborting");return;}
-
-                            //recheck
-                            if (
-                                !checkFieldValid({fieldValue:key,fieldType:"number",fieldStateSetter:setKey})
-                            ) {return}
-
-                            //at this point, request should be valid (hopefully)
-                            //post to database
-                            const reqResult = handleSubmit({_reminder: reminder.name, _due: reminder.due, _importance: reminder.importance, _key: key, _reqType: "DELETE", __id: reminder._id, _created: reminder.created})
-                                .then(res => res?.json()
-                                    .then(data => ({status: res.status, body: data})))
-                                .then(obj => {
-                                    console.log("response from server:", obj);
-                                    if (obj?.status != 200) {
-                                        setReqError({code: Number(obj?.status), message: obj?.body.message});
-                                        return;
-                                    }
-                                    else {
-                                        //success! refresh list
-                                        updateRemindersCallback(obj.body);
-
-                                        //close UI
-                                        onShow();
-                                    }
-                                });
-                        }}>delete!</button>
-
                     </div>
-                </div>
+                ) : (
+                    <>
+                        <p className="text-black font-bold p-5">sign in to delete {reminder.name}!</p>
+                        <button className="absolute top-5 right-3 ring-1 ring-black rounded-lg p-3 mr-3 bg-red-200" onClick={onShow}>close</button>
+                    </>
+                )}
             </div>) : (null)
         }
         </>
@@ -321,15 +333,6 @@ const Reminderz = ({_reminders}:any) => {
 
     const [reminders, setReminders] = useState(_reminders);
 
-    // useEffect(() => {
-    //     const getData = async () => {
-    //         const query = await fetch("../api/remindersapi");
-    //         const response = await query.json();
-    //         setReminders(response);
-    //     }
-    //     getData();
-    // },[]);
-
     const makeReminders = ({reminders, showDeleteUI}:any) => {
         return (
             <>
@@ -338,28 +341,12 @@ const Reminderz = ({_reminders}:any) => {
         )
     }
 
-    /*
-    const thisProj = {
-        name:"This website!",
-        html_url:"https://github.com/rnguyen513/resume",
-        description:"This website was built using Next.js and hosted on Vercel.",
-        language:"Typescript, Javascript, CSS",
-        created_at:"Present",
-        owner:{login:"Ryan Nguyen"}
-    }
-
+    /* still dont know how useeffect works lol
     const [color, setColor] = useState("");
     useEffect(() => {
         setColor("hello");
     },[]);
-
     */
-
-    //title
-    //author
-    //description
-    //language
-    //createdAt
 
     //FOR PUSH UI
     const [isActive, setIsActive] = useState(false);
@@ -376,12 +363,20 @@ const Reminderz = ({_reminders}:any) => {
         setReminders(reminders);
     }
 
+    const {data, status} = useSession();
+
     return(
         <>
         <div className={"relative flex flex-col min-h-screen overflow-hidden"}>
             <Header></Header>
             <Background></Background>
-            <p className="text-purple-400 font-bold text-3xl ml-2">Reminderz <button className="text-green-400" onClick={() => setIsActive(!isActive)}>&#40;+Add&#41;</button></p>
+            <p className="text-purple-400 font-bold text-3xl ml-2">Reminderz&nbsp;
+                {status == "authenticated" ? (
+                    <button className="text-green-400" onClick={() => setIsActive(!isActive)}>&#40;+Add&#41;</button>
+                ) : (
+                    <a className="text-red-200">(sign in to add)</a>
+                )}
+            </p>
             <div key={seed} className={"flex flex-row flex-grow flex-wrap justify-between min-h-fit text-white font-bold gap-y-5 ml-2 mt-2 mb-5"}>
                 {/*<ReminderTemplate reminder={someReminder}/>*/}
                 {reminders.length ? (

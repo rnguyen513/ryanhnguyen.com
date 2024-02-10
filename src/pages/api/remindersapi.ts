@@ -50,7 +50,7 @@ export default async function RemindAPIReq(req:any, res:any) {
 
                     const duplicateDoc = {
                         name: req.body.name,
-                        author: "Ryan Nguyen",
+                        author: req.body.author,
                         created: req.body.created,
                         due: req.body.due+104340000,
                         importance: req.body.importance,
@@ -72,7 +72,7 @@ export default async function RemindAPIReq(req:any, res:any) {
                 //insert NOT delete
                 const doc = {
                     name: req.body.name,
-                    author: "Ryan Nguyen",
+                    author: req.body.author,
                     created: Date.now(),
                     due: req.body.due+104340000,
                     importance: req.body.importance,

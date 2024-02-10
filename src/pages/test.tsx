@@ -1,24 +1,35 @@
 import { useEffect, useState } from "react";
 import { AddRemindUI } from "./reminders";
 import { ProgressBar } from "react-bootstrap";
+import Image from "next/image";
+
+import {useSession, signIn, signOut} from "next-auth/react";
 
 export default function TestPage() {
     const [active, setActive] = useState(false);
 
-    //console.log(1-(Date.now()-1706213981788)/(1706486400000-1706213981788));
-    //console.log(Date.now());
-
-    //reques("/courses/103203/assignments/458225");
+    const {data, status} = useSession();
+    if (status === "loading") return <h1>loading ... please wait</h1>
+    if (status === "authenticated") {
+        console.log(data);
+        return (
+            <div className="flex flex-col bg-white min-h-screen text-black">
+                <h1>Signed in: {data.user?.name + ", " + data.user?.email}</h1>
+                <img src={data.user?.image ? (data.user.image) : ("")} height={500} width={500}></img>
+                <Panel isActive={active} onShow={() => {setActive(!active)}}>
+                    With a population of about 2 million, Almaty is Kazakhstan&apos;s largest city. From 1929 to 1997, it was its capital city.
+                </Panel>
+                <button className="text-xl font-bold" onClick={() => setActive(!active)}>Open</button>
+                <ProgressBar variant="danger" animated now={66} className=""/>
+                <progress value={0.3}></progress>
+                <button onClick={() => signOut({redirect:false})}>sign out</button>
+            </div>
+        )
+    }
 
     return(
-        <div className="bg-white min-h-screen text-black">
-            <h1>Kazakhstan</h1>
-            <Panel isActive={active} onShow={() => {setActive(!active)}}>
-                With a population of about 2 million, Almaty is Kazakhstan&apos;s largest city. From 1929 to 1997, it was its capital city.
-            </Panel>
-            <button className="text-xl font-bold" onClick={() => setActive(!active)}>Open</button>
-            <ProgressBar variant="danger" animated now={66} className=""/>
-            <progress value={0.3}></progress>
+        <div>
+            <button onClick={() => signIn("google")} className="bg-white text-black">sign in!!!!</button>
         </div>
     )
 }
