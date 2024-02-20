@@ -3,6 +3,7 @@ import Background from "./components/background";
 import Header from "./components/header";
 import { Progressbar } from "./components/progressbar";
 import Head from "next/head";
+import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button } from "@nextui-org/react";
 
 import {useSession, signIn, signOut} from "next-auth/react";
 
@@ -120,7 +121,7 @@ export function AddRemindUI({isActive, onShow, updateRemindersCallback}:any) {
     return(
         <>
         {isActive ? (
-            <div className="absolute h-80 w-3/5 left-20 top-20 bg-gray-200 ring-4 ring-black rounded-lg shadow-lg shadow-white/10 font-bold">
+            <div className="fixed h-80 w-3/5 left-20 top-20 bg-gray-200 ring-4 ring-black rounded-lg shadow-lg shadow-white/10 font-bold">
                 {status == "authenticated" ? (
                     <div className="flex flex-col items-center justify-around h-full rounded-lg text-black">
                         <h1 className="text-blue-400 text-3xl">Add remind</h1>
@@ -129,6 +130,7 @@ export function AddRemindUI({isActive, onShow, updateRemindersCallback}:any) {
                         <div>
                             <p>due</p>
                             <input type="date" placeholder="05/06/2024" onChange={(e) => checkFieldValid({fieldValue:toUnix(e.target.value),fieldType:"number",fieldStateSetter:setDue})}></input>
+                            <input type="time"></input>
                         </div>
                         <input type="number" placeholder="importance" onChange={(e) => checkFieldValid({fieldValue:Number(e.target.value),fieldType:"number",fieldStateSetter:setImportance})}></input>
                         {/*<input type="number" placeholder="password" onChange={(e) => {checkFieldValid({fieldValue:Number(e.target.value),fieldType:"number",fieldStateSetter:setKey})}}></input>*/}
@@ -272,7 +274,7 @@ export function AddDeleteUI({isActive, onShow, updateRemindersCallback, reminder
     return(
         <>
         {isActive ? (
-            <div className="absolute h-80 w-3/5 left-20 top-20 bg-white ring-4 ring-gray-300/10 rounded-lg shadow-lg shadow-white/10 font-bold">
+            <div className="fixed h-80 w-3/5 left-20 top-20 bg-white ring-4 ring-gray-300/10 rounded-lg shadow-lg shadow-white/10 font-bold">
                 {status == "authenticated" ? (
                     <div className="flex flex-col items-center justify-around h-full rounded-lg text-black">
                         <h1 className="text-red-400 text-3xl">delete {reminder.name}</h1>

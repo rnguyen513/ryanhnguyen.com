@@ -2,37 +2,58 @@ import { useEffect, useState } from "react";
 import { AddRemindUI } from "./reminders";
 import { ProgressBar } from "react-bootstrap";
 import Image from "next/image";
+import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure } from "@nextui-org/react";
+
 
 import {useSession, signIn, signOut} from "next-auth/react";
 
-export default function TestPage() {
-    const [active, setActive] = useState(false);
+// export function TestPage() {
+//     const [active, setActive] = useState(false);
 
-    const {data, status} = useSession();
-    if (status === "loading") return <h1>loading ... please wait</h1>
-    if (status === "authenticated") {
-        console.log(data);
-        return (
-            <div className="flex flex-col bg-white min-h-screen text-black">
-                <h1>Signed in: {data.user?.name + ", " + data.user?.email}</h1>
-                <img src={data.user?.image ? (data.user.image) : ("")} height={500} width={500}></img>
-                <Panel isActive={active} onShow={() => {setActive(!active)}}>
-                    With a population of about 2 million, Almaty is Kazakhstan&apos;s largest city. From 1929 to 1997, it was its capital city.
-                </Panel>
-                <button className="text-xl font-bold" onClick={() => setActive(!active)}>Open</button>
-                <ProgressBar variant="danger" animated now={66} className=""/>
-                <progress value={0.3}></progress>
-                <button onClick={() => signOut({redirect:false})}>sign out</button>
-            </div>
-        )
-    }
+//     const {data, status} = useSession();
+//     if (status === "loading") return <h1>loading ... please wait</h1>
+//     if (status === "authenticated") {
+//         console.log(data);
 
-    return(
-        <div>
-            <button onClick={() => signIn("google")} className="bg-white text-black">sign in!!!!</button>
-        </div>
-    )
-}
+//         const {isOpen, onOpen, onOpenChange} = useDisclosure();
+//         return (
+//             <Modal isOpen={isOpen} backdrop="blur">
+//                 <ModalContent>
+//                     {(onClose) => (
+//                         <>
+//                             <ModalHeader>modal title</ModalHeader>
+//                             <ModalBody>
+//                                 <p>
+//                                     hello hello hello
+//                                 </p>
+//                             </ModalBody>
+//                             <ModalFooter>
+//                                 <Button onPress={onClose}></Button>
+//                             </ModalFooter>
+//                         </>
+//                     )}
+//                 </ModalContent>
+//             </Modal>
+//             // <div className="flex flex-col bg-white min-h-screen text-black">
+//             //     <h1>Signed in: {data.user?.name + ", " + data.user?.email}</h1>
+//             //     <img src={data.user?.image ? (data.user.image) : ("")} height={500} width={500}></img>
+//             //     <Panel isActive={active} onShow={() => {setActive(!active)}}>
+//             //         With a population of about 2 million, Almaty is Kazakhstan&apos;s largest city. From 1929 to 1997, it was its capital city.
+//             //     </Panel>
+//             //     <button className="text-xl font-bold" onClick={() => setActive(!active)}>Open</button>
+//             //     <ProgressBar variant="danger" animated now={66} className=""/>
+//             //     <progress value={0.3}></progress>
+//             //     <button onClick={() => signOut({redirect:false})}>sign out</button>
+//             // </div>
+//         )
+//     }
+
+//     return(
+//         <div>
+//             <button onClick={() => signIn("google")} className="bg-white text-black">sign in!!!!</button>
+//         </div>
+//     )
+// }
 
 const reques = async (endpoint:string) => {
     const rere = await fetch(`https://canvas.its.virginia.edu/api/v1${endpoint}`, {
@@ -67,3 +88,32 @@ function Panel({children,isActive,onShow}:any) {
         </section>
     )
 }
+
+// export const testPage2 = () => {
+//     const {isOpen, onOpen, onOpenChange} = useDisclosure();
+//     return(
+//         <div className="bg-blue-200">
+//         <Button onPress={onOpen}>open modal</Button>
+//         <Modal isOpen={isOpen} backdrop="blur">
+//             <ModalContent>
+//                 {(onClose) => (
+//                     <>
+//                         <ModalHeader>modal title</ModalHeader>
+//                         <ModalBody>
+//                             <p>
+//                                 hello hello hello
+//                             </p>
+//                         </ModalBody>
+//                         <ModalFooter>
+//                             <Button onPress={onClose}></Button>
+//                         </ModalFooter>
+//                     </>
+//                 )}
+//             </ModalContent>
+//         </Modal>
+//         </div>
+//     )
+// }
+
+//export default testPage2;
+export default Panel;
