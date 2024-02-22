@@ -1,9 +1,10 @@
-import { createRef, useRef, useEffect, useState } from "react";
+import { createRef, useRef, useEffect, useState, Suspense } from "react";
 import Background from "./components/background";
 import Header from "./components/header";
 import { Progressbar } from "./components/progressbar";
 import Head from "next/head";
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button } from "@nextui-org/react";
+import Loading from "./loading";
 
 import {useSession, signIn, signOut} from "next-auth/react";
 
@@ -403,10 +404,10 @@ const Reminderz = ({_reminders}:any) => {
 
     return(
         <>
+        <Head>
+            <title>{data?.user?.name ? (`${data.user.name.split(" ")[0]}'s Reminders`) : ("Reminders")}</title>
+        </Head>
         <div className={"relative flex flex-col min-h-screen overflow-hidden"}>
-            <Head>
-                <title>{data?.user?.name ? (`${data.user.name}'s Reminders`) : ("Reminders")}</title>
-            </Head>
             <Header></Header>
             <Background></Background>
             <p className="text-purple-400 font-bold text-3xl ml-2">Reminderz&nbsp;
