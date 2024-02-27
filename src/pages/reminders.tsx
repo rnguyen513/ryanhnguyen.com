@@ -1,7 +1,7 @@
 import { createRef, useRef, useEffect, useState, Suspense } from "react";
-import Background from "./components/background";
-import Header from "./components/header";
-import { Progressbar } from "./components/progressbar";
+import Background from "../components/background";
+import Header from "../components/header";
+import { Progressbar } from "../components/progressbar";
 import Head from "next/head";
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button } from "@nextui-org/react";
 import Loading from "./loading";

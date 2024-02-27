@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
-import Background from "./components/background"
-import Header from "./components/header"
+import Background from "../components/background"
+import Header from "../components/header"
 
 const ProjTemplate = ({_proj}:{_proj:any}) => {
     return(

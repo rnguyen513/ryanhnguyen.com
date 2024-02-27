@@ -1,9 +1,12 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { AddRemindUI } from "./reminders";
 import { ProgressBar } from "react-bootstrap";
 import Image from "next/image";
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure } from "@nextui-org/react";
 
+import { SparklesCore } from "@/components/ui/Sparkles";
+import { GoogleGeminiEffect } from "@/components/ui/google-gemini-effect";
+import { useScroll, useTransform } from "framer-motion";
 
 import {useSession, signIn, signOut} from "next-auth/react";
 
@@ -17,23 +20,24 @@ import {useSession, signIn, signOut} from "next-auth/react";
 
 //         const {isOpen, onOpen, onOpenChange} = useDisclosure();
 //         return (
-//             <Modal isOpen={isOpen} backdrop="blur">
-//                 <ModalContent>
-//                     {(onClose) => (
-//                         <>
-//                             <ModalHeader>modal title</ModalHeader>
-//                             <ModalBody>
-//                                 <p>
-//                                     hello hello hello
-//                                 </p>
-//                             </ModalBody>
-//                             <ModalFooter>
-//                                 <Button onPress={onClose}></Button>
-//                             </ModalFooter>
-//                         </>
-//                     )}
-//                 </ModalContent>
-//             </Modal>
+//             //<Panel isActive={isOpen} onShow={onOpen}></Panel>
+//             // <Modal isOpen={isOpen} backdrop="blur">
+//             //     <ModalContent>
+//             //         {(onClose) => (
+//             //             <>
+//             //                 <ModalHeader>modal title</ModalHeader>
+//             //                 <ModalBody>
+//             //                     <p>
+//             //                         hello hello hello
+//             //                     </p>
+//             //                 </ModalBody>
+//             //                 <ModalFooter>
+//             //                     <Button onPress={onClose}></Button>
+//             //                 </ModalFooter>
+//             //             </>
+//             //         )}
+//             //     </ModalContent>
+//             // </Modal>
 //             // <div className="flex flex-col bg-white min-h-screen text-black">
 //             //     <h1>Signed in: {data.user?.name + ", " + data.user?.email}</h1>
 //             //     <img src={data.user?.image ? (data.user.image) : ("")} height={500} width={500}></img>
@@ -115,5 +119,47 @@ function Panel({children,isActive,onShow}:any) {
 //     )
 // }
 
+const TestPage3 = () => {
+    return(
+        <>
+        <div className="relative flex flex-row min-h-screen overflow-hidden">
+            <SparklesCore background={"red"} maxSize={1}></SparklesCore>
+        </div>
+        </>
+    )
+}
+
+const GoogleGeminiEffectDemo = () => {
+    const ref = useRef(null);
+    const { scrollYProgress } = useScroll({
+      target: ref,
+      offset: ["start start", "end start"],
+    });
+   
+    const pathLengthFirst = useTransform(scrollYProgress, [0, 0.8], [0.2, 1.2]);
+    const pathLengthSecond = useTransform(scrollYProgress, [0, 0.8], [0.15, 1.2]);
+    const pathLengthThird = useTransform(scrollYProgress, [0, 0.8], [0.1, 1.2]);
+    const pathLengthFourth = useTransform(scrollYProgress, [0, 0.8], [0.05, 1.2]);
+    const pathLengthFifth = useTransform(scrollYProgress, [0, 0.8], [0, 1.2]);
+   
+    return (
+      <div
+        className="h-[400vh] bg-black w-full dark:border dark:border-white/[0.1] rounded-md relative pt-40 overflow-clip"
+        ref={ref}
+      >
+        <GoogleGeminiEffect
+          pathLengths={[
+            pathLengthFirst,
+            pathLengthSecond,
+            pathLengthThird,
+            pathLengthFourth,
+            pathLengthFifth,
+          ]}
+        />
+      </div>
+    );
+  }
+
 //export default testPage2;
-export default Panel;
+// export default Panel;
+export default GoogleGeminiEffectDemo;

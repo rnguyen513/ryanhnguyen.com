@@ -1,5 +1,5 @@
-import Background from "./components/background";
-import Header from "./components/header";
+import Background from "../components/background";
+import Header from "../components/header";
 import Image from "next/image";
 
 export default function About() {
