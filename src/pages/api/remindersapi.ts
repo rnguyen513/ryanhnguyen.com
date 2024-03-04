@@ -16,11 +16,12 @@ export default async function RemindAPIReq(req: NextApiRequest, res: NextApiResp
         //const csrf = req.cookies.get("next-auth.csrf-token")?.value.split("|")[0];
         const csrf = req.cookies["next-auth.csrf-token"]?.split("|")[0];
         //console.log(csrf);
-        if (!csrf) {
-            return res.status(400).send({
-                message: "no csrf loser"
-            });
-        }
+        // if (!csrf) {
+        //     console.log("abort");
+        //     return res.status(400).send({
+        //         message: "no csrf loser"
+        //     });
+        // }
 
         /* insert
         const doc = {name: "TESTINSERT",
@@ -47,6 +48,13 @@ export default async function RemindAPIReq(req: NextApiRequest, res: NextApiResp
             //         message: "Error: wrong password!"
             //     });
             // }
+
+            if (!csrf) {
+                console.log("abort");
+                return res.status(400).send({
+                    message: "no csrf loser"
+                });
+            }
 
             //check if data is valid
             if (req.body.name == "" || typeof req.body.due != "string" || typeof req.body.importance != "number") {
