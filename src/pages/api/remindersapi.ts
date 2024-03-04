@@ -1,12 +1,26 @@
 import clientPromise from "../../../lib/mongodb";
 import { ObjectId } from "mongodb";
+import {nextCsrf} from "next-csrf";
+import { getCsrfToken } from "next-auth/react";
+//import {cookies} from "next/headers";
+import type { NextApiRequest, NextApiResponse } from "next";
 
-export default async function RemindAPIReq(req:any, res:any) {
+export default async function RemindAPIReq(req: NextApiRequest, res: NextApiResponse) {
     try {
         const client = await clientPromise;
         const db = client.db("live_rnguyencom");
         const coll = db.collection("reminders");
         const history = db.collection("history");
+
+        //console.log("req", await req);
+        //const csrf = req.cookies.get("next-auth.csrf-token")?.value.split("|")[0];
+        const csrf = req.cookies["next-auth.csrf-token"]?.split("|")[0];
+        //console.log(csrf);
+        if (!csrf) {
+            return res.status(400).send({
+                message: "no csrf loser"
+            });
+        }
 
         /* insert
         const doc = {name: "TESTINSERT",

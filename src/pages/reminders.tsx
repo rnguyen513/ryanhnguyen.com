@@ -441,6 +441,8 @@ const Reminderz = ({_reminders}:any) => {
     const [showMine, setShowMine] = useState(false);
 
     const {data, status} = useSession();
+    console.log(data);
+    console.log(status);
 
     return(
         <>
