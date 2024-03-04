@@ -408,7 +408,7 @@ const Reminderz = ({_reminders}:any) => {
 
     console.log(_reminders);
 
-    const [reminders, setReminders] = useState(_reminders);
+    const [reminders, setReminders] = useState((_reminders || []));
 
     const makeReminders = ({reminders, showDeleteUI}:any) => {
         return (

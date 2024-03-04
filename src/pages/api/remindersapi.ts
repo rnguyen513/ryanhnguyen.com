@@ -14,8 +14,8 @@ export default async function RemindAPIReq(req: NextApiRequest, res: NextApiResp
 
         //console.log("req", await req);
         //const csrf = req.cookies.get("next-auth.csrf-token")?.value.split("|")[0];
-        const csrf = req.cookies["next-auth.csrf-token"]?.split("|")[0];
-        //console.log(csrf);
+        const csrf = req.cookies["__Host-next-auth.csrf-token"]?.split("|")[0];
+        console.log(csrf);
         // if (!csrf) {
         //     console.log("abort");
         //     return res.status(400).send({
