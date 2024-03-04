@@ -35,8 +35,8 @@ export default async function RemindAPIReq(req:any, res:any) {
             // }
 
             //check if data is valid
-            if (req.body.name == "" || typeof req.body.due != "number" || typeof req.body.importance != "number") {
-                console.log("invalid request");
+            if (req.body.name == "" || typeof req.body.due != "string" || typeof req.body.importance != "number") {
+                console.log("invalid request:", req.body.name, typeof req.body.due, req.body.importance);
                 return res.status(400).send({
                     message: "Error: malformed request!"
                 });
@@ -67,7 +67,7 @@ export default async function RemindAPIReq(req:any, res:any) {
                         author: req.body.author,
                         authorEmail: req.body.authorEmail,
                         created: req.body.created,
-                        due: req.body.due+104340000,
+                        due: req.body.due,
                         importance: req.body.importance,
                         color: req.body.color,
                         _id: new ObjectId(req.body._id)
@@ -89,8 +89,9 @@ export default async function RemindAPIReq(req:any, res:any) {
                     name: req.body.name,
                     author: req.body.author,
                     authorEmail: req.body.authorEmail,
-                    created: Date.now(),
-                    due: req.body.due+104340000,
+                    created: new Date(Date.now()),
+                    /*due: req.body.due+104340000,&*/
+                    due: new Date(req.body.due),
                     importance: req.body.importance,
                     color: req.body.color
                 }

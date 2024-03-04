@@ -5,6 +5,7 @@ import { Progressbar } from "../components/progressbar";
 import Head from "next/head";
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button } from "@nextui-org/react";
 import Loading from "./loading";
+import { Checkbox } from "@nextui-org/react";
 
 import {useSession, signIn, signOut} from "next-auth/react";
 
@@ -36,25 +37,43 @@ export const toUnix = (dateString:string) => {
 }
 
 const ReminderTemplate = ({reminder, showDeleteUI}:any) => {
-    let [percentDone, setPercentDone] = useState((Date.now()-reminder.created)/(reminder.due - reminder.created));
 
-    const progressStyle = (percent:number) => {
-        if (percent >= 0.75) return "success";
-        else if (percent >= 0.25 && percent < 0.75) return "warning";
-        else return "danger";
+    let createdAt = new Date(reminder.created);
+
+    if (reminder.name.split(" ")[0].toUpperCase() == "TEST") {
+        console.log("percent done for", reminder.name, ":", ((new Date(Date.now()).getTime() - createdAt.getTime())/(new Date(reminder.due).getTime() - createdAt.getTime())));
     }
 
-    //console.log(reminder.name + " is " + (1-percentDone) + " to being finished");
+    let [percentDone, setPercentDone] = useState((new Date(Date.now()).getTime() - createdAt.getTime())/(new Date(reminder.due).getTime() - createdAt.getTime()));
+
+    // const progressStyle = (percent:number) => {
+    //     if (percent >= 0.75) return "success";
+    //     else if (percent >= 0.25 && percent < 0.75) return "warning";
+    //     else return "danger";
+    // }
+
+    let displayDate = new Date(reminder.due);
+
+    let displayHours = displayDate.getUTCHours() % 12 || displayDate.getUTCHours();
+    let displayMinutes = displayDate.getUTCMinutes();
+
+    //update progress in real time
+    useEffect(() => {
+        setTimeout(() => {
+            setPercentDone((new Date(Date.now()).getTime() - createdAt.getTime())/(new Date(reminder.due).getTime() - createdAt.getTime()));
+        },200);
+    });
 
     return(
-        <a className={"group relative flex flex-col ring-1 ring-gray-300/10 shadow-lg shadow-white/10 py-2 px-4 flex-col bg-gray-100/5 rounded-lg mr-2"}>
+        <a className={`group relative flex flex-col ring-1 ring-gray-300/10 shadow-lg shadow-white/10 py-2 px-4 flex-col bg-gray-100/5 rounded-lg mr-2`}>
             <button style={{backgroundColor: `${(reminder.color != "#FF0000" && reminder.color != null) ? (reminder.color) : ("")}`}} className={`text-4xl hover:text-red-400 mb-2 rounded-lg p-1`} onClick={() => showDeleteUI([true, reminder._id])}>{reminder.name}</button>
             <p>{reminder.author}</p>
             <p className={"text-yellow-200"}>Importance: {reminder.importance}</p>
-            <p className={"text-red-300"}>Due: {toDateTime(parseInt(reminder.due))}</p>
+            {/*<p className={"text-red-300"}>Due: {displayDate.toLocaleDateString()}, {displayHours ? (displayHours) : ("--")}:{displayMinutes ? (displayMinutes < 10 ? ("0" + displayMinutes) : (displayMinutes)) : ("--")} {displayDate.getUTCHours() < 12 ? ("AM") : ("PM")}</p>*/}
+            <p className="text-red-300">Due: {displayDate.toLocaleDateString()}, {displayDate.toLocaleTimeString()}</p>
             <p>Created: {toDateTime(reminder.created)}</p>
             {/*<ProgressBar animated variant={progressStyle(66)} now={66}></ProgressBar>*/}
-            {(percentDone >= 1) ? (<p className="text-purple-400">Expired!</p>) : (<Progressbar width={(1-percentDone)*100}></Progressbar>)}
+            {(percentDone >= 1 || percentDone < 0) ? (<p className="text-purple-400">Expired!</p>) : (<Progressbar width={(1-percentDone)*100}></Progressbar>)}
             {/*<button className="absolute top-12 right-12 text-red-400 text-3xl" onClick={()=>{console.log("hello from", reminder._id);showDeleteUI([true, reminder._id])}}>x</button>*/}
         </a>
     )
@@ -95,7 +114,7 @@ export const handleSubmit = async ({_reminder, _due, _importance, _key, _color, 
 export function AddRemindUI({isActive, onShow, updateRemindersCallback}:any) {
 
     const [name, setName] = useState("");
-    const [due, setDue] = useState(0);
+    const [due, setDue] = useState(new Date("2024-02-29"));
     const [importance, setImportance] = useState(0);
     const [key, setKey] = useState(0);
     const [color, setColor] = useState("#FF0000");
@@ -103,6 +122,7 @@ export function AddRemindUI({isActive, onShow, updateRemindersCallback}:any) {
     const [allValid, setAllValid] = useState(true);
 
     const checkFieldValid = ({fieldValue, fieldType, fieldStateSetter}:any) => {
+        console.log(fieldValue, typeof fieldValue);
         setReqError({code:0,message:""});
         if (fieldValue.length != "" && typeof fieldValue == fieldType) {fieldStateSetter(fieldValue);return true;}
         else {console.log("errors in input, got", fieldValue, "for", fieldType);setAllValid(false);return false}
@@ -122,18 +142,35 @@ export function AddRemindUI({isActive, onShow, updateRemindersCallback}:any) {
     return(
         <>
         {isActive ? (
-            <div className="fixed h-80 w-3/5 left-20 top-20 bg-gray-200 ring-4 ring-black rounded-lg shadow-lg shadow-white/10 font-bold">
+            <div className="fixed h-200 w-3/5 left-20 top-20 bg-gray-200 ring-4 ring-black rounded-lg shadow-lg shadow-white/10 font-bold">
                 {status == "authenticated" ? (
                     <div className="flex flex-col items-center justify-around h-full rounded-lg text-black">
                         <h1 className="text-blue-400 text-3xl">Add remind</h1>
                         <p>author: {data?.user?.name}, {data?.user?.email}</p>
-                        <input type="text" placeholder="reminder" onChange={(e) => checkFieldValid({fieldValue:e.target.value,fieldType:"string",fieldStateSetter:setName})}></input>
+                        <input type="text" placeholder="reminder" onChange={(e) => checkFieldValid({fieldValue:e.target.value,fieldType:"string",fieldStateSetter:setName})} className="m-1 ring-1 ring-black rounded-lg"></input>
                         <div>
                             <p>due</p>
-                            <input type="date" placeholder="05/06/2024" onChange={(e) => checkFieldValid({fieldValue:toUnix(e.target.value),fieldType:"number",fieldStateSetter:setDue})}></input>
-                            <input type="time"></input>
+                            <input type="date" placeholder="05/06/2024" onChange={(e) => {
+
+                                let inputDate = new Date(e.target.value)
+                                inputDate.setDate(inputDate.getDate()+1)
+
+                                checkFieldValid({fieldValue:(inputDate),fieldType:"object",fieldStateSetter:setDue})
+
+                            }} className="m-1 ring-1 ring-black rounded-lg"></input>
+                            <input type="time" onChange={(e) => {
+                                let time = e.target.value.split(":")
+                                let hours = parseInt(time[0]); let minutes = parseInt(time[1])
+                                // if (hours >= 0 && hours <= 23 && minutes >= 0 && minutes <= 59) {
+                                //     setDue(new Date(due.setUTCHours(hours, minutes)))
+                                // }
+                                setDue(new Date(due.setHours(hours, minutes))) //setHours() vs setUTCHours()
+
+                                console.log(due.toUTCString())
+                                //console.log(due)
+                            }} className="m-1 ring-1 ring-black rounded-lg"></input>
                         </div>
-                        <input type="number" placeholder="importance" onChange={(e) => checkFieldValid({fieldValue:Number(e.target.value),fieldType:"number",fieldStateSetter:setImportance})}></input>
+                        <input type="number" placeholder="importance" onChange={(e) => checkFieldValid({fieldValue:Number(e.target.value),fieldType:"number",fieldStateSetter:setImportance})} className="m-1 ring-1 ring-black rounded-lg"></input>
                         {/*<input type="number" placeholder="password" onChange={(e) => {checkFieldValid({fieldValue:Number(e.target.value),fieldType:"number",fieldStateSetter:setKey})}}></input>*/}
                         <div className="flex-row">
                             <p>color &#40;optional&#41;:</p>
@@ -156,7 +193,7 @@ export function AddRemindUI({isActive, onShow, updateRemindersCallback}:any) {
 
                                 //reset
                                 setName("");
-                                setDue(0);
+                                setDue(new Date("2024-02-29"));
                                 setImportance(0);
                                 setKey(0);
                                 setColor("#FF0000");
@@ -170,7 +207,7 @@ export function AddRemindUI({isActive, onShow, updateRemindersCallback}:any) {
                                 //recheck
                                 if (
                                     !checkFieldValid({fieldValue:name,fieldType:"string",fieldStateSetter:setName}) ||
-                                    !checkFieldValid({fieldValue:due,fieldType:"number",fieldStateSetter:setDue}) ||
+                                    !checkFieldValid({fieldValue:due,fieldType:"object",fieldStateSetter:setDue}) ||
                                     !checkFieldValid({fieldValue:importance,fieldType:"number",fieldStateSetter:setImportance}) ||
                                     /*!checkFieldValid({fieldValue:key,fieldType:"number",fieldStateSetter:setKey}) ||*/
                                     !checkFieldValid({fieldValue:color,fieldType:"string",fieldStateSetter:setColor})
@@ -194,7 +231,7 @@ export function AddRemindUI({isActive, onShow, updateRemindersCallback}:any) {
                                             onShow();
 
                                             setName("");
-                                            setDue(0);
+                                            setDue(new Date("2024-02-29"));
                                             setImportance(0);
                                             setKey(0);
                                             setColor("#FF0000");
@@ -219,7 +256,9 @@ export function AddRemindUI({isActive, onShow, updateRemindersCallback}:any) {
                                 //reload page to upate list
                                 //window.location.reload();
                             }}>submit</button>
-
+                            <div className="m-5 p-5 bg-black rounded-lg text-white">
+                                <ReminderTemplate reminder={{name:(name || "[new reminder]"),due:due,importance:importance,color:color,author:data?.user?.name,created:Date.now()}} showDeleteUI={()=>{}}></ReminderTemplate>
+                            </div>
                         </div>
                     </div>
                 ) : (
@@ -231,7 +270,7 @@ export function AddRemindUI({isActive, onShow, updateRemindersCallback}:any) {
 
                             //reset
                             setName("");
-                            setDue(0);
+                            setDue(new Date("2024-02-29"));
                             setImportance(0);
                             setKey(0);
                             setColor("#FF0000");
@@ -280,7 +319,7 @@ export function AddDeleteUI({isActive, onShow, updateRemindersCallback, reminder
                     <div className="flex flex-col items-center justify-around h-full rounded-lg text-black">
                         <h1 className="text-red-400 text-3xl">delete {reminder.name}</h1>
 
-                        <p>_id: {reminder._id}</p>
+                        <p>author: {reminder.authorEmail}</p>
                         <p>Due: {toDateTime(reminder.due)}</p>
                         <p>Importance: {reminder.importance}</p>
                         <p>Created: {toDateTime(reminder.created)}</p>
@@ -400,6 +439,8 @@ const Reminderz = ({_reminders}:any) => {
         setReminders(reminders);
     }
 
+    const [showMine, setShowMine] = useState(false);
+
     const {data, status} = useSession();
 
     return(
@@ -410,9 +451,13 @@ const Reminderz = ({_reminders}:any) => {
         <div className={"relative flex flex-col min-h-screen overflow-hidden"}>
             <Header></Header>
             <Background></Background>
-            <p className="text-purple-400 font-bold text-3xl ml-2">Reminderz&nbsp;
+            <p className="text-purple-400 font-bold text-3xl ml-2 flex flex-row items-center">Reminderz&nbsp;
                 {status == "authenticated" ? (
-                    <button className="text-green-400" onClick={() => setIsActive(!isActive)}>&#40;+Add&#41;</button>
+                    <>
+                        <button className="text-green-400" onClick={() => setIsActive(!isActive)}>&#40;+Add&#41;</button>
+                        <input type="checkbox" className="ml-5 mr-2" onClick={()=>setShowMine(!showMine)}/>
+                        <dd className="text-xl text-white">Show mine only</dd>
+                    </>
                 ) : (
                     <a className="text-red-200">(sign in to add)</a>
                 )}
@@ -420,9 +465,16 @@ const Reminderz = ({_reminders}:any) => {
             <div key={seed} className={"flex flex-row flex-grow flex-wrap justify-between min-h-fit text-white font-bold gap-y-5 ml-2 mt-2 mb-5"}>
                 {/*<ReminderTemplate reminder={someReminder}/>*/}
                 {reminders.length ? (
-                    <>
-                        {makeReminders({reminders:reminders, showDeleteUI: setDeleteIsActive})}
-                    </>
+                    showMine ? (
+                        <>
+                            {makeReminders({reminders:reminders.filter((r:any) => r.authorEmail == data?.user?.email), showDeleteUI: setDeleteIsActive})}
+                            {/*refreshFetch()*/}
+                        </>
+                    ) : (
+                        <>
+                            {makeReminders({reminders:reminders, showDeleteUI: setDeleteIsActive})}
+                        </>
+                    )
                 ) : (<p className="text-red-400 text-lg">NO REMINDERS</p>)}
             </div>
             <AddRemindUI isActive={isActive} onShow={() => {setIsActive(!isActive)}} refreshList={() => refreshFetch()} updateRemindersCallback={handleReminderUpdateCallback}></AddRemindUI>

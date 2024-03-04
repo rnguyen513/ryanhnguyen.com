@@ -158,8 +158,28 @@ const GoogleGeminiEffectDemo = () => {
         />
       </div>
     );
-  }
+}
+
+const PropTest = (props:any) => {
+    console.log(props.name);
+    return(
+        <>
+        <div className="font-bold">
+            <p style={{backgroundColor: `${props.bgcolor}`}}>{props.name}</p>
+        </div>
+        </>
+    )
+}
+
+const PropDriver = () => {
+    <>
+    <div className="relative flex flex-row min-h-screen overflow-hidden bg-white">
+        <PropTest name="this is props.name" bgcolor="red"></PropTest>
+    </div>
+    </>
+}
 
 //export default testPage2;
 // export default Panel;
-export default GoogleGeminiEffectDemo;
+//export default GoogleGeminiEffectDemo;
+export default PropDriver;
