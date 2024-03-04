@@ -71,7 +71,7 @@ const ReminderTemplate = ({reminder, showDeleteUI}:any) => {
             <p className={"text-yellow-200"}>Importance: {reminder.importance}</p>
             {/*<p className={"text-red-300"}>Due: {displayDate.toLocaleDateString()}, {displayHours ? (displayHours) : ("--")}:{displayMinutes ? (displayMinutes < 10 ? ("0" + displayMinutes) : (displayMinutes)) : ("--")} {displayDate.getUTCHours() < 12 ? ("AM") : ("PM")}</p>*/}
             <p className="text-red-300">Due: {displayDate.toLocaleDateString()}, {displayDate.toLocaleTimeString()}</p>
-            <p>Created: {toDateTime(reminder.created)}</p>
+            <p>Created: {/*toDateTime(reminder.created)*/new Date(reminder.created).toLocaleDateString()}</p>
             {/*<ProgressBar animated variant={progressStyle(66)} now={66}></ProgressBar>*/}
             {(percentDone >= 1 || percentDone < 0) ? (<p className="text-purple-400">Expired!</p>) : (<Progressbar width={(1-percentDone)*100}></Progressbar>)}
             {/*<button className="absolute top-12 right-12 text-red-400 text-3xl" onClick={()=>{console.log("hello from", reminder._id);showDeleteUI([true, reminder._id])}}>x</button>*/}
@@ -142,7 +142,7 @@ export function AddRemindUI({isActive, onShow, updateRemindersCallback}:any) {
     return(
         <>
         {isActive ? (
-            <div className="fixed h-200 w-3/5 left-20 top-20 bg-gray-200 ring-4 ring-black rounded-lg shadow-lg shadow-white/10 font-bold">
+            <div className="fixed h-200 w-screen md:w-3/5 left-0 md:left-20 top-20 bg-gray-200 ring-4 ring-black rounded-lg shadow-lg shadow-white/10 font-bold">
                 {status == "authenticated" ? (
                     <div className="flex flex-col items-center justify-around h-full rounded-lg text-black">
                         <h1 className="text-blue-400 text-3xl">Add remind</h1>
@@ -263,7 +263,7 @@ export function AddRemindUI({isActive, onShow, updateRemindersCallback}:any) {
                     </div>
                 ) : (
                     <>
-                        <p className="text-black font-bold p-5">sign in to add!</p>
+                        <p className="text-black font-bold p-5">Sign in to add!</p>
                         <button className="absolute top-5 right-3 ring-1 ring-black rounded-lg p-3 mr-3 bg-red-200" onClick={() => {
                             onShow();
                             setAllValid(true);
@@ -314,15 +314,14 @@ export function AddDeleteUI({isActive, onShow, updateRemindersCallback, reminder
     return(
         <>
         {isActive ? (
-            <div className="fixed h-80 w-3/5 left-20 top-20 bg-white ring-4 ring-gray-300/10 rounded-lg shadow-lg shadow-white/10 font-bold">
+            <div className="fixed h-200 w-screen md:w-3/5 left-0 md:left-20 top-20 bg-white ring-4 ring-black rounded-lg shadow-lg shadow-white/10 font-bold">
                 {status == "authenticated" ? (
-                    <div className="flex flex-col items-center justify-around h-full rounded-lg text-black">
-                        <h1 className="text-red-400 text-3xl">delete {reminder.name}</h1>
+                    <div className="flex flex-col items-center justify-around h-full rounded-lg text-black p-10">
+                        <h1 className="text-red-400 text-3xl">Delete:</h1>
 
-                        <p>author: {reminder.authorEmail}</p>
-                        <p>Due: {toDateTime(reminder.due)}</p>
-                        <p>Importance: {reminder.importance}</p>
-                        <p>Created: {toDateTime(reminder.created)}</p>
+                        <div className="m-5 p-5 bg-black rounded-lg text-white">
+                        <ReminderTemplate reminder={reminder} showDeleteUI={()=>{}}></ReminderTemplate>
+                        </div>
 
                         {/*<input type="number" placeholder="password" onChange={(e) => {checkFieldValid({fieldValue:Number(e.target.value),fieldType:"number",fieldStateSetter:setKey})}}></input>*/}
 
@@ -336,7 +335,7 @@ export function AddDeleteUI({isActive, onShow, updateRemindersCallback, reminder
 
                         <div className="flex-row">
                             {/*close button*/}
-                            <button className="absolute top-5 right-3 ring-1 ring-black rounded-lg p-3 mr-3 bg-red-200" onClick={() => {
+                            <button className="absolute top-5 right-3 ring-1 ring-black rounded-lg p-3 mt-3 bg-red-200" onClick={() => {
                                 onShow();
                                 setAllValid(true);
                                 setReqError({code: 0, message:""});
