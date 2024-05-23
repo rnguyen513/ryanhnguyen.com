@@ -96,7 +96,7 @@ export default function Header(/*{isConnected}:InferGetServerSidePropsType<typeo
                     <HeaderCell href="reminders" text="Reminders"></HeaderCell>
                 </div>
             </div>
-            <div className="flex flex-row items-center pr-5 font-bold">
+            <div className="flex flex-row items-center pr-5 font-bold text-white">
                 {(status != "authenticated") ? ((status == "loading") ? (
                     <p>Loading...</p>
                 ) : (

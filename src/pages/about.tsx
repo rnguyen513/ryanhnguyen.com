@@ -25,16 +25,20 @@ export default function About() {
                     I am pursuing <a className={"underline"}>computer science</a>, and I also have <a className={"text-yellow-200"}>experience in embedded electronics, 
                     circuitry, and Internet of Things (IoT)</a> projects. I am <a className={"text-red-300"}>interested in research pertaining 
                     to artificial intelligence/machine learning</a> in all contexts. You can check out my <a href="resume" className={"hover:text-blue-400"}>resume</a>, <a href="projects" className={"hover:text-blue-400"}>projects</a>, and <a href="contact" className={"hover:text-blue-400"}>contact information</a>.
+                    <br/>
+                    <a className="text-3xl md:text-6xl">R</a>yan <a href="https://engineering.virginia.edu/i-s2ee" target="_blank" className={"text-green-200"}>works for the UVA I-S<sup>2</sup>EE Lab&#8599;</a>, which performs research in civil engineering-related disciplines. 
+                    He is using artificial intelligence to create simulations of the real world (called &quot;digital twins&quot;) that are used for analysis. Computations are performed digitally to model stress/deformation, without conventional finite analysis. Presently, the lab is able to import prerendered
+                    models to an augmented reality environment, but research is being done to develop realtime methods for recognizing environmental objects.
                 </p>
                 <div className="min-w-full flex flex-row flex-grow flex-wrap justify-around -mt-5 gap-y-5 mb-5">
                     {srcs.map(pic => <Image key={pic} src={pic} width={375} height={600} alt="Ryan Nguyen" className="ring-1 ring-white/20"></Image>)}
                 </div>
-                <p className={"text-white text-xl md:text-3xl font-bold p-20 -mt-10 -mb-10"}>
+                {/* <p className={"text-white text-xl md:text-3xl font-bold p-20 -mt-10 -mb-10"}>
                     <a className="text-3xl md:text-6xl">R</a>yan was recently <a href="https://engineering.virginia.edu/i-s2ee" target="_blank" className={"text-green-200"}>hired to the UVA I-S<sup>2</sup>EE Lab&#8599;</a>, which performs research in civil engineering-related disciplines. 
                     He is using artificial intelligence to create simulations of the real world (called &quot;digital twins&quot;) that are used for analysis. Computations are performed digitally to model stress/deformation, without conventional finite analysis. Presently, the lab is able to import prerendered
                     models to an augmented reality environment, but research is being done to develop realtime methods for recognizing environmental objects.<br/><br/>Similar research &darr;
-                </p>
-                <iframe width="95%" height="850px" className={"mb-10 ring-1 ring-gray-400/20 rounded-lg bg-white"} src="https://www.sciencedirect.com/science/article/abs/pii/S0965997815000733"></iframe>
+                </p> */}
+                {/*<iframe width="95%" height="850px" className={"mb-10 ring-1 ring-gray-400/20 rounded-lg bg-white"} src="https://www.sciencedirect.com/science/article/abs/pii/S0965997815000733"></iframe>*/}
             </div>
         </div>
     )
