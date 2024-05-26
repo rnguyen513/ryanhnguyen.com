@@ -1,34 +1,23 @@
-import { createRef, useRef, useEffect, useState, Suspense } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import Background from "../components/background";
 import Header from "../components/header";
 import { Progressbar } from "../components/progressbar";
 import Head from "next/head";
-import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button } from "@nextui-org/react";
-import Loading from "./loading";
-import { Checkbox } from "@nextui-org/react";
 
 import {useSession, signIn, signOut} from "next-auth/react";
 
-export type reminder = {
+export interface Reminder {
     _id: string,
     name: string,
     author: string,
-    created: number,
-    due: number,
-    importance: number
+    authorEmail: string,
+    created: Date,
+    due: Date,
+    importance: number,
+    color: string
 }
 
 export const toDateTime = (ms:number) => {
-
-    /*
-    let a = new Date(ms);
-    let year = a.getFullYear();
-    let month = a.getMonth() + 1;
-    let date = a.getDate() + 1;
-
-    return(month + "/" + date + "/" + year);
-    */
-
     return new Date(ms).toLocaleString("en-US", {timeZone:"EST"});
 }
 
@@ -36,7 +25,11 @@ export const toUnix = (dateString:string) => {
     return Math.floor(new Date(dateString).getTime());
 }
 
-const ReminderTemplate = ({reminder, showDeleteUI}:any) => {
+interface ReminderTemplateProps {
+    reminder: Reminder,
+    showDeleteUI: Dispatch<SetStateAction<(boolean | string)[]>>
+}
+const ReminderTemplate = ({reminder, showDeleteUI}:ReminderTemplateProps) => {
 
     let createdAt = new Date(reminder.created);
 
@@ -45,12 +38,6 @@ const ReminderTemplate = ({reminder, showDeleteUI}:any) => {
     }
 
     let [percentDone, setPercentDone] = useState((new Date(Date.now()).getTime() - createdAt.getTime())/(new Date(reminder.due).getTime() - createdAt.getTime()));
-
-    // const progressStyle = (percent:number) => {
-    //     if (percent >= 0.75) return "success";
-    //     else if (percent >= 0.25 && percent < 0.75) return "warning";
-    //     else return "danger";
-    // }
 
     let displayDate = new Date(reminder.due);
 
@@ -79,7 +66,19 @@ const ReminderTemplate = ({reminder, showDeleteUI}:any) => {
     )
 }
 
-export const handleSubmit = async ({_reminder, _due, _importance, _key, _color, _author, _authorEmail, _reqType, __id, _created}:any) => {
+interface handleSubmitProps {
+    _reminder: string,
+    _due: Date,
+    _importance: number,
+    _key: string,
+    _color: string,
+    _author: string,
+    _authorEmail: string,
+    _reqType: string,
+    __id: string,
+    _created: Date
+}
+export const handleSubmit = async ({_reminder, _due, _importance, _key, _color, _author, _authorEmail, _reqType, __id, _created}:handleSubmitProps) => {
     try {
         //post request
         const request = await fetch("../api/remindersapi", {
@@ -111,12 +110,17 @@ export const handleSubmit = async ({_reminder, _due, _importance, _key, _color, 
     }
 }
 
-export function AddRemindUI({isActive, onShow, updateRemindersCallback}:any) {
+interface AddRemindUIProps {
+    isActive: boolean,
+    onShow: ()=>void,
+    updateRemindersCallback: (reminders: Reminder[])=>void
+}
+const AddRemindUI = ({isActive, onShow, updateRemindersCallback}:AddRemindUIProps) => {
 
     const [name, setName] = useState("");
     const [due, setDue] = useState(new Date("2024-02-29"));
     const [importance, setImportance] = useState(0);
-    const [key, setKey] = useState(0);
+    const [key, setKey] = useState("0");
     const [color, setColor] = useState("#FF0000");
 
     const [allValid, setAllValid] = useState(true);
@@ -195,7 +199,7 @@ export function AddRemindUI({isActive, onShow, updateRemindersCallback}:any) {
                                 setName("");
                                 setDue(new Date("2024-02-29"));
                                 setImportance(0);
-                                setKey(0);
+                                setKey("0");
                                 setColor("#FF0000");
                                 console.log(data);
                             }}>close</button>
@@ -215,7 +219,19 @@ export function AddRemindUI({isActive, onShow, updateRemindersCallback}:any) {
 
                                 //at this point, request should be valid (hopefully)
                                 //post to database
-                                const reqResult = handleSubmit({_reminder: name, _due: due, _importance: importance, _key: key, _color: color, _author: data?.user?.name, _authorEmail: data?.user?.email, _reqType: "PUSH"})
+                                const req_name = data?.user?.name ? data.user.name : "UNKNOWN";
+                                const req_email = data?.user?.email ? data.user.email : "UKNOWN";
+                                const reqResult = handleSubmit({_reminder:name,
+                                                                _due:due,
+                                                                _importance:importance,
+                                                                _key:key,
+                                                                _color:color,
+                                                                _author:req_name,
+                                                                _authorEmail:req_email,
+                                                                _reqType:"PUSH",
+                                                                __id:"0",
+                                                                _created:new Date(0)}
+                                                            )
                                     .then(res => res?.json()
                                         .then(data => ({status: res.status, body: data})))
                                     .then(obj => {
@@ -233,31 +249,24 @@ export function AddRemindUI({isActive, onShow, updateRemindersCallback}:any) {
                                             setName("");
                                             setDue(new Date("2024-02-29"));
                                             setImportance(0);
-                                            setKey(0);
+                                            setKey("0");
                                             setColor("#FF0000");
                                         }
                                     });
-                                //console.log(reqResult);
-
-                                //if reqResult OK, continue otherwise halt-----
-                                
-                                //reset
-                                //setName("");
-                                //setDue(0);
-                                //setImportance(0);
-                                //setKey(0);
-
-                                //onShow();
-
-                                //change seed (state) of reminder list so that it refreshes and includes new reminder
-
-                                //refreshList();
-
-                                //reload page to upate list
-                                //window.location.reload();
                             }}>submit</button>
                             <div className="m-5 p-5 bg-black rounded-lg text-white">
-                                <ReminderTemplate reminder={{name:(name || "[new reminder]"),due:due,importance:importance,color:color,author:data?.user?.name,created:Date.now()}} showDeleteUI={()=>{}}></ReminderTemplate>
+                                <ReminderTemplate
+                                    reminder={{
+                                                _id: "0",
+                                                name:(name || "[new reminder]"),
+                                                due:due,
+                                                importance:importance,
+                                                color:color,
+                                                author:String(data?.user?.name),
+                                                authorEmail:"UNKNOWN",
+                                                created:new Date(Date.now())}
+                                            }
+                                    showDeleteUI={()=>{}}/>
                             </div>
                         </div>
                     </div>
@@ -272,7 +281,7 @@ export function AddRemindUI({isActive, onShow, updateRemindersCallback}:any) {
                             setName("");
                             setDue(new Date("2024-02-29"));
                             setImportance(0);
-                            setKey(0);
+                            setKey("0");
                             setColor("#FF0000");
                         }}>close</button>
                     </>
@@ -283,7 +292,13 @@ export function AddRemindUI({isActive, onShow, updateRemindersCallback}:any) {
     )
 }
 
-export function AddDeleteUI({isActive, onShow, updateRemindersCallback, reminder}:any) {
+interface AddDeleteUIProps {
+    isActive: (boolean | string),
+    onShow: ()=>void,
+    updateRemindersCallback: (reminders: Reminder[])=>void,
+    reminder: Reminder
+}
+export function AddDeleteUI({isActive, onShow, updateRemindersCallback, reminder}:AddDeleteUIProps) {
     const [key, setKey] = useState(0);
 
     const [allValid, setAllValid] = useState(true);
@@ -354,7 +369,18 @@ export function AddDeleteUI({isActive, onShow, updateRemindersCallback, reminder
 
                                 //at this point, request should be valid (hopefully)
                                 //post to database
-                                const reqResult = handleSubmit({_reminder: reminder.name, _due: reminder.due, _importance: reminder.importance, _key: key, _color: reminder.color, _author: reminder.author, _authorEmail: data?.user?.email, _reqType: "DELETE", __id: reminder._id, _created: reminder.created})
+                                const r_email = data?.user?.email ? data.user.email : "UKNOWN";
+                                const reqResult = handleSubmit({_reminder:reminder.name,
+                                                                _due:reminder.due,
+                                                                _importance:reminder.importance,
+                                                                _key:String(key),
+                                                                _color:reminder.color,
+                                                                _author:reminder.author,
+                                                                _authorEmail:r_email,
+                                                                _reqType:"DELETE",
+                                                                __id:reminder._id,
+                                                                _created:reminder.created}
+                                                            )
                                     .then(res => res?.json()
                                         .then(data => ({status: res.status, body: data})))
                                     .then(obj => {
@@ -390,40 +416,26 @@ export function AddDeleteUI({isActive, onShow, updateRemindersCallback, reminder
     )
 }
 
-//https://raw.githubusercontent.com/ryangu23/gmailnoti/main/README.md
-//https://raw.githubusercontent.com/{user}/{repo}/{branch}/README.md
+interface makeRemindersProps {
+    reminders: Reminder[],
+    showDeleteUI: Dispatch<SetStateAction<(boolean | string)[]>>
+}
+export const makeReminders = ({reminders, showDeleteUI}:makeRemindersProps) => {
+    return (
+        <>
+            {reminders.map((reminder:Reminder) => <div key={reminder._id}><ReminderTemplate reminder={reminder} showDeleteUI={showDeleteUI}></ReminderTemplate></div>)}
+        </>
+    )
+}
 
-const Reminderz = ({_reminders}:any) => {
-
-    /*
-    const [reminders, setReminders] = useState([
-        {_id: "[_id] 65ac578e01ed29334b261402",
-        name: "[name] eggs",
-        author: "[author] Ryan Nguyen",
-        created: 1705793422035,
-        due: 1705793426199,
-        importance: 10}
-    ]);
-    */
+interface ReminderzProps {
+    _reminders: Reminder[]
+}
+const Reminderz = ({_reminders}:ReminderzProps) => {
 
     console.log(_reminders);
 
     const [reminders, setReminders] = useState((_reminders || []));
-
-    const makeReminders = ({reminders, showDeleteUI}:any) => {
-        return (
-            <>
-                {reminders.map((reminder:any) => <div key={reminder._id}><ReminderTemplate reminder={reminder} showDeleteUI={showDeleteUI}></ReminderTemplate></div>)}
-            </>
-        )
-    }
-
-    /* still dont know how useeffect works lol
-    const [color, setColor] = useState("");
-    useEffect(() => {
-        setColor("hello");
-    },[]);
-    */
 
     //FOR PUSH UI
     const [isActive, setIsActive] = useState(false);
@@ -432,11 +444,8 @@ const Reminderz = ({_reminders}:any) => {
     const [deleteIsActive, setDeleteIsActive] = useState([false, "65b3d063030029e415df93d3"]);
 
     const [seed, setSeed] = useState(1);
-    const refreshFetch = () => {
-        setSeed(Math.random());
-    }
 
-    const handleReminderUpdateCallback = (reminders:any) => {
+    const handleReminderUpdateCallback = (reminders:Reminder[]) => {
         setReminders(reminders);
     }
 
@@ -466,22 +475,29 @@ const Reminderz = ({_reminders}:any) => {
                 )}
             </p>
             <div key={seed} className={"flex flex-row flex-grow flex-wrap justify-between min-h-fit text-white font-bold gap-y-5 ml-2 mt-2 mb-5"}>
-                {/*<ReminderTemplate reminder={someReminder}/>*/}
                 {reminders.length ? (
                     showMine ? (
                         <>
-                            {makeReminders({reminders:reminders.filter((r:any) => r.authorEmail == data?.user?.email), showDeleteUI: setDeleteIsActive})}
-                            {/*refreshFetch()*/}
+                            {makeReminders({reminders:reminders.filter((r:Reminder) => r.authorEmail == data?.user?.email), showDeleteUI:setDeleteIsActive})}
                         </>
                     ) : (
                         <>
-                            {makeReminders({reminders:reminders, showDeleteUI: setDeleteIsActive})}
+                            {makeReminders({reminders:reminders, showDeleteUI:setDeleteIsActive})}
                         </>
                     )
                 ) : (<p className="text-red-400 text-lg">NO REMINDERS</p>)}
             </div>
-            <AddRemindUI isActive={isActive} onShow={() => {setIsActive(!isActive)}} refreshList={() => refreshFetch()} updateRemindersCallback={handleReminderUpdateCallback}></AddRemindUI>
-            <AddDeleteUI isActive={deleteIsActive[0]} onShow={() => {setDeleteIsActive([false, "65b3d063030029e415df93d3"])}} updateRemindersCallback={handleReminderUpdateCallback} reminder={reminders?.find((_reminder:any)=>_reminder._id==deleteIsActive[1])}></AddDeleteUI>
+            <AddRemindUI
+                isActive={isActive}
+                onShow={() => {setIsActive(!isActive)}}
+                updateRemindersCallback={handleReminderUpdateCallback}
+            />
+            <AddDeleteUI
+                isActive={deleteIsActive[0]}
+                onShow={() => {setDeleteIsActive([false, "65b3d063030029e415df93d3"])}}
+                updateRemindersCallback={handleReminderUpdateCallback}
+                reminder={reminders?.find((_reminder:Reminder)=>_reminder._id==deleteIsActive[1]) ?? {name:"error", author:"error", authorEmail:"error", _id:"error", created:new Date(0), due:new Date(0), color:"error", importance:0}}
+            />
         </div>
         </>
     )

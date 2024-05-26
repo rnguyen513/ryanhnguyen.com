@@ -70,14 +70,14 @@ export default function Header(/*{isConnected}:InferGetServerSidePropsType<typeo
     // )
 
     return(
-        <div className="flex flex-row justify-between bg-gray-100/5 ring-0 ring-gray-300/5 shadow-lg shadow-white/10 shadow-md">
+        <div className="flex flex-row justify-between bg-gray-100/5 ring-0 ring-gray-300/5 shadow-lg shadow-white/10 shadow-md text-white">
             <div className={"flex flex-row justify-start items-center h-14 pl-5 z-50"}>
                 <div className="flex lg:hidden">
                     <Dropdown className="text-3xl font-bold" backdrop="blur">
                         <DropdownTrigger>
                             <Button variant="bordered" className="text-3xl">&equiv;</Button>
                         </DropdownTrigger>
-                        <DropdownMenu variant="faded" aria-label="Static Actions" className="bg-gray-500/95 ring-2 ring-gray-300/50 shadow-lg shadow-white/40 rounded-lg font-bold">
+                        <DropdownMenu variant="faded" aria-label="Static Actions" className="bg-gray-500/95 ring-2 ring-gray-300/50 shadow-lg shadow-white/40 rounded-lg font-bold text-white">
                             <DropdownItem key="rnguyen" href="/">Ryan Nguyen</DropdownItem>
                             <DropdownItem key="about" href="about">About</DropdownItem>
                             <DropdownItem key="resume" href="resume">Resume</DropdownItem>
