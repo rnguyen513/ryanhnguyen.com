@@ -17,14 +17,7 @@ export interface Reminder {
     color: string
 }
 
-export const toDateTime = (ms:number) => {
-    return new Date(ms).toLocaleString("en-US", {timeZone:"EST"});
-}
-
-export const toUnix = (dateString:string) => {
-    return Math.floor(new Date(dateString).getTime());
-}
-
+//Template for reminder entry
 interface ReminderTemplateProps {
     reminder: Reminder,
     showDeleteUI: Dispatch<SetStateAction<(boolean | string)[]>>
@@ -56,16 +49,14 @@ const ReminderTemplate = ({reminder, showDeleteUI}:ReminderTemplateProps) => {
             <button style={{backgroundColor: `${(reminder.color != "#FF0000" && reminder.color != null) ? (reminder.color) : ("")}`}} className={`text-4xl hover:text-red-400 mb-2 rounded-lg p-1`} onClick={() => showDeleteUI([true, reminder._id])}>{reminder.name}</button>
             <p>{reminder.author}</p>
             <p className={"text-yellow-200"}>Importance: {reminder.importance}</p>
-            {/*<p className={"text-red-300"}>Due: {displayDate.toLocaleDateString()}, {displayHours ? (displayHours) : ("--")}:{displayMinutes ? (displayMinutes < 10 ? ("0" + displayMinutes) : (displayMinutes)) : ("--")} {displayDate.getUTCHours() < 12 ? ("AM") : ("PM")}</p>*/}
             <p className="text-red-300">Due: {displayDate.toLocaleDateString()}, {displayDate.toLocaleTimeString()}</p>
-            <p>Created: {/*toDateTime(reminder.created)*/new Date(reminder.created).toLocaleDateString()}</p>
-            {/*<ProgressBar animated variant={progressStyle(66)} now={66}></ProgressBar>*/}
+            <p>Created: {new Date(reminder.created).toLocaleDateString()}</p>
             {(percentDone >= 1 || percentDone < 0) ? (<p className="text-purple-400">Expired!</p>) : (<Progressbar width={(1-percentDone)*100}></Progressbar>)}
-            {/*<button className="absolute top-12 right-12 text-red-400 text-3xl" onClick={()=>{console.log("hello from", reminder._id);showDeleteUI([true, reminder._id])}}>x</button>*/}
         </a>
     )
 }
 
+//Async function that's called when user adds new reminder via UI
 interface handleSubmitProps {
     _reminder: string,
     _due: Date,
@@ -110,6 +101,7 @@ export const handleSubmit = async ({_reminder, _due, _importance, _key, _color, 
     }
 }
 
+//UI for creating new reminder
 interface AddRemindUIProps {
     isActive: boolean,
     onShow: ()=>void,
@@ -292,6 +284,7 @@ const AddRemindUI = ({isActive, onShow, updateRemindersCallback}:AddRemindUIProp
     )
 }
 
+//UI for deleting selected reminder
 interface AddDeleteUIProps {
     isActive: (boolean | string),
     onShow: ()=>void,
@@ -300,7 +293,6 @@ interface AddDeleteUIProps {
 }
 export function AddDeleteUI({isActive, onShow, updateRemindersCallback, reminder}:AddDeleteUIProps) {
     const [key, setKey] = useState(0);
-
     const [allValid, setAllValid] = useState(true);
 
     const checkFieldValid = ({fieldValue, fieldType, fieldStateSetter}:any) => {
@@ -416,6 +408,7 @@ export function AddDeleteUI({isActive, onShow, updateRemindersCallback, reminder
     )
 }
 
+//Component that instantiates array of reminders (uses reminder template from above)
 interface makeRemindersProps {
     reminders: Reminder[],
     showDeleteUI: Dispatch<SetStateAction<(boolean | string)[]>>
@@ -428,6 +421,7 @@ export const makeReminders = ({reminders, showDeleteUI}:makeRemindersProps) => {
     )
 }
 
+//Base component for /reminders
 interface ReminderzProps {
     _reminders: Reminder[]
 }
@@ -503,6 +497,7 @@ const Reminderz = ({_reminders}:ReminderzProps) => {
     )
 }
 
+//Server side rendering for reminders, then pass to base component above
 export const getServerSideProps = async () => {
 
     //fix if have time
