@@ -20,8 +20,9 @@ export default function Contact() {
             </div>
             <div className={"flex flex-col flex-grow justify-center items-center z-10 pointer-events-none"}>
                 <div className={"flex flex-col items-center pointer-events-auto"}>
-                    <MediaTitle text="LinkedIn" href="https://www.linkedin.com/in/rnguyen2/"></MediaTitle>
-                    <MediaTitle text="Email" href="mailto:rnguyen3372@gmail.com"></MediaTitle>
+                    <MediaTitle text="LinkedIn" href="https://www.linkedin.com/in/rnguyen2/"/>
+                    <MediaTitle text="Email" href="mailto:rnguyen3372@gmail.com"/>
+                    <MediaTitle text="GitHub" href="https://www.github.com/rnguyen513"/>
                 </div>
             </div>
         </div>
