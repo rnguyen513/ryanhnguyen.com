@@ -1,31 +1,5 @@
-/*
-import clientPromise from "../../../lib/mongodb"
-import type { InferGetServerSidePropsType, GetServerSideProps } from "next"
-
-export type ConnectionStatus = {
-    isConnected: boolean;
-}
-
-export const getServerSideProps: GetServerSideProps<ConnectionStatus> = async () => {
-    try {
-        await clientPromise;
-
-        return {
-            props: {isConnected: true}
-        };
-    }
-    catch (e) {
-        console.error(e);
-        return {
-            props: {isConnected: false}
-        };
-    }
-}
-
-*/
-
-//import {Navbar, NavbarBrand, NavbarContent, NavbarItem, Link, Button} from "@nextui-org/react";
 import {Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Link, Button} from "@nextui-org/react"
+import { GoogleIcon } from "./ui/GoogleIcon";
 
 import {useSession, signIn, signOut} from "next-auth/react";
 
@@ -35,39 +9,9 @@ export function HeaderCell({text, href, props}:any) {
     )
 }
 
-export default function Header(/*{isConnected}:InferGetServerSidePropsType<typeof getServerSideProps>*/) {
+export default function Header() {
 
     const {data, status} = useSession();
-
-    // return(
-    //     <Navbar className="font-bold text-3xl w-100 h-10 bg-red-200">
-    //         <NavbarBrand className="bg-purple-200">
-    //             <Link color="foreground" href="/">Ryan Nguyen</Link>
-    //         </NavbarBrand>
-    //         <NavbarContent className="hidden sm:flex gap-4 bg-blue-200">
-    //             <NavbarItem>
-    //                 <Link color="foreground" href="about">About</Link>
-    //             </NavbarItem>
-    //             <NavbarItem>
-    //                 <Link color="foreground" href="resume">Resume</Link>
-    //             </NavbarItem>
-    //             <NavbarItem>
-    //                 <Link color="foreground" href="projects">Projects</Link>
-    //             </NavbarItem>
-    //             <NavbarItem>
-    //                 <Link color="foreground" href="contact">Contact</Link>
-    //             </NavbarItem>
-    //             <NavbarItem>
-    //                 <Link href="reminders">Reminders</Link>
-    //             </NavbarItem>
-    //         </NavbarContent>
-    //         <NavbarContent className="bg-green-200">
-    //             <NavbarItem>
-    //                 <Button onClick={() => signIn("google")} color="primary" variant="flat">Sign In</Button>
-    //             </NavbarItem>
-    //         </NavbarContent>
-    //     </Navbar>
-    // )
 
     return(
         <div className="flex flex-row justify-between bg-gray-100/5 ring-0 ring-gray-300/5 shadow-lg shadow-white/10 shadow-md text-white">
@@ -77,8 +21,8 @@ export default function Header(/*{isConnected}:InferGetServerSidePropsType<typeo
                         <DropdownTrigger>
                             <Button variant="bordered" className="text-3xl">&equiv;</Button>
                         </DropdownTrigger>
-                        <DropdownMenu variant="faded" aria-label="Static Actions" className="bg-gray-500/95 ring-2 ring-gray-300/50 shadow-lg shadow-white/40 rounded-lg font-bold text-white">
-                            <DropdownItem key="rnguyen" href="/">Ryan Nguyen</DropdownItem>
+                        <DropdownMenu variant="faded" aria-label="Static Actions" className="bg-gray-500/95 ring-2 ring-gray-300/50  rounded-lg font-extrabold text-white">
+                            <DropdownItem key="rnguyen" href="/" className="font-bold">Ryan Nguyen</DropdownItem>
                             <DropdownItem key="about" href="about">About</DropdownItem>
                             <DropdownItem key="resume" href="resume">Resume</DropdownItem>
                             <DropdownItem key="projects" href="projects">Projects</DropdownItem>
@@ -100,13 +44,17 @@ export default function Header(/*{isConnected}:InferGetServerSidePropsType<typeo
                 {(status != "authenticated") ? ((status == "loading") ? (
                     <p>Loading...</p>
                 ) : (
-                    <button onClick={() => signIn("google")}>Sign in with <a className="text-green-200">Google</a>!</button>
+                    // <button onClick={() => signIn("google")}>Sign in with <a className="text-green-200">Google</a>!</button>
+                    <div className="flex flex-row items-center px-2 py-1 rounded-lg border border-gray-200 hover:cursor-pointer" onClick={() => signIn("google")}>
+                        <GoogleIcon/>
+                        <p className="ml-2">Continue with Google</p>
+                    </div>
                 )) : (
-                    <>
+                    <div className="flex flex-row items-center px-2 py-1 rounded-lg">
+                        <img className="pr-2" src={data.user?.image ? (data.user?.image) : ("")} height="30" width="30"></img>
                         <p className="pr-2">{data.user?.name}</p>
-                        <img className="pr-2" src={data.user?.image ? (data.user?.image) : ("")} height="20" width="20"></img>
-                        <button onClick={() => signOut({redirect:false})} className="text-blue-200">Sign out&rarr;</button>
-                    </>
+                        <button onClick={() => signOut({redirect:false})} className="text-blue-200 rounded-lg px-2 py-1 bg-red-200/20">Sign out&rarr;</button>
+                    </div>
                 )}
             </div>
         </div>
