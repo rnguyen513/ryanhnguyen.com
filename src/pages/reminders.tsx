@@ -502,7 +502,7 @@ export const getServerSideProps = async () => {
 
     //fix if have time
     let re: any[] = [];
-    const request = await fetch("https://www.r-nguyen.com/api/remindersapi").then(data => data.json()).then(rem => {
+    const request = await fetch("https://www.ryanhnguyen.com/api/remindersapi").then(data => data.json()).then(rem => {
         //console.log(rem);
         re = rem;
     });
