@@ -15,18 +15,18 @@ export default function Page() {
                     }).then(data => data.json()).then(quote => {
                         // alert(quote["content"]);
                         setQuote(quote["content"]);
-                    });
-
-                    fetch("https://api.groupme.com/v3/bots/post", {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json"
-                        },
-                        body: JSON.stringify({
-                            "text": "🎂Happy Birthday Jonax!🎂\n\n\"" + quote + "\"\n- Jonax",
-                            "bot_id": "1633fd1202f04d912496c5c8ca"
-                        })
-                    });
+                    }).then(() => {
+                        fetch("https://api.groupme.com/v3/bots/post", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify({
+                                "text": "🎂Happy Birthday Jonax!🎂\n\n\"" + quote + "\"\n- Jonax",
+                                "bot_id": "1633fd1202f04d912496c5c8ca"
+                            })
+                        });
+                    })
                 }
             } className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full">🎂Happy Birthday Jonax!🎂</button>
             <p className="text-3xl mt-5 max-w-lg content-center">{quote}</p>
