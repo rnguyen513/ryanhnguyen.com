@@ -1,7 +1,7 @@
 import clientPromise from "../../../lib/mongodb";
 import { ObjectId } from "mongodb";
-import {nextCsrf} from "next-csrf";
-import { getCsrfToken } from "next-auth/react";
+// import {nextCsrf} from "next-csrf";
+// import { getCsrfToken } from "next-auth/react";
 //import {cookies} from "next/headers";
 import type { NextApiRequest, NextApiResponse } from "next";
 
@@ -49,78 +49,82 @@ export default async function RemindAPIReq(req: NextApiRequest, res: NextApiResp
             //     });
             // }
 
-            if (!csrf) {
-                console.log("abort");
-                return res.status(400).send({
-                    message: "no csrf loser"
-                });
-            }
+            return res.status(400).send({
+                message: "currently unavailable..."
+            });
 
-            //check if data is valid
-            if (req.body.name == "" || typeof req.body.due != "string" || typeof req.body.importance != "number") {
-                console.log("invalid request:", req.body.name, typeof req.body.due, req.body.importance);
-                return res.status(400).send({
-                    message: "Error: malformed request!"
-                });
-            }
+            // if (!csrf) {
+            //     console.log("abort");
+            //     return res.status(400).send({
+            //         message: "no csrf loser"
+            //     });
+            // }
 
-            //check if pushing to db or request to delete from db
-            if (req.body.reqType == "DELETE") {
-                //delete
-                try {
-                    //console.log(req.body._id);
+            // //check if data is valid
+            // if (req.body.name == "" || typeof req.body.due != "string" || typeof req.body.importance != "number") {
+            //     console.log("invalid request:", req.body.name, typeof req.body.due, req.body.importance);
+            //     return res.status(400).send({
+            //         message: "Error: malformed request!"
+            //     });
+            // }
 
-                    const target = await coll.findOne({_id: new ObjectId(req.body._id)});
+            // //check if pushing to db or request to delete from db
+            // if (req.body.reqType == "DELETE") {
+            //     //delete
+            //     try {
+            //         //console.log(req.body._id);
 
-                    if (!target || target == null) return res.status(400).send({
-                        message: `reminder with id ${req.body._id} does not exist!`
-                    });
+            //         const target = await coll.findOne({_id: new ObjectId(req.body._id)});
 
-                    console.log(req.body.authorEmail, "trying to delete", target.authorEmail);
+            //         if (!target || target == null) return res.status(400).send({
+            //             message: `reminder with id ${req.body._id} does not exist!`
+            //         });
 
-                    if (target.authorEmail != req.body.authorEmail) {
-                        return res.status(400).send({
-                            message: `You don't have access to delete ${target.author}'s reminder!`
-                        })
-                    }
+            //         console.log(req.body.authorEmail, "trying to delete", target.authorEmail);
 
-                    const duplicateDoc = {
-                        name: req.body.name,
-                        author: req.body.author,
-                        authorEmail: req.body.authorEmail,
-                        created: req.body.created,
-                        due: req.body.due,
-                        importance: req.body.importance,
-                        color: req.body.color,
-                        _id: new ObjectId(req.body._id)
-                    }
+            //         if (target.authorEmail != req.body.authorEmail) {
+            //             return res.status(400).send({
+            //                 message: `You don't have access to delete ${target.author}'s reminder!`
+            //             })
+            //         }
 
-                    const duplicate = await history.insertOne(duplicateDoc);
-                    const result = await coll.deleteOne(target);
+            //         const duplicateDoc = {
+            //             name: req.body.name,
+            //             author: req.body.author,
+            //             authorEmail: req.body.authorEmail,
+            //             created: req.body.created,
+            //             due: req.body.due,
+            //             importance: req.body.importance,
+            //             color: req.body.color,
+            //             _id: new ObjectId(req.body._id)
+            //         }
 
-                    //return success
-                    //res.json({"success":`${req.body.name} has been deleted`});
-                }
-                catch (e) {
-                    res.json({"error":`${e}`});
-                }
-            }
-            else if (req.body.reqType == "PUSH") {
-                //insert NOT delete
-                const doc = {
-                    name: req.body.name,
-                    author: req.body.author,
-                    authorEmail: req.body.authorEmail,
-                    created: new Date(Date.now()),
-                    /*due: req.body.due+104340000,&*/
-                    due: new Date(req.body.due),
-                    importance: req.body.importance,
-                    color: req.body.color
-                }
+            //         const duplicate = await history.insertOne(duplicateDoc);
+            //         const result = await coll.deleteOne(target);
+
+            //         //return success
+            //         //res.json({"success":`${req.body.name} has been deleted`});
+            //     }
+            //     catch (e) {
+            //         res.json({"error":`${e}`});
+            //     }
+            // }
+            // else if (req.body.reqType == "PUSH") {
+            //     //insert NOT delete
+            //     const doc = {
+            //         name: req.body.name,
+            //         author: req.body.author,
+            //         authorEmail: req.body.authorEmail,
+            //         created: new Date(Date.now()),
+            //         /*due: req.body.due+104340000,&*/
+            //         due: new Date(req.body.due),
+            //         importance: req.body.importance,
+            //         color: req.body.color
+            //     }
     
-                const result = await coll.insertOne(doc);
-                //console.log(result.insertedId);
-            }
+            //     const result = await coll.insertOne(doc);
+            //     //console.log(result.insertedId);
+            // }
         }
 
         //regardless if POST or GET, always return updated list
