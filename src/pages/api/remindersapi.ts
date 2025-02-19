@@ -50,7 +50,7 @@ export default async function RemindAPIReq(req: NextApiRequest, res: NextApiResp
             // }
 
             return res.status(400).send({
-                message: "currently unavailable..."
+                message: (req.body.author == "William Kaiser" || req.body.authorEmail == "wkaisertexas@gmail.com") ? "currently unavailable...thanks william" : "currently unavailable..."
             });
 
             // if (!csrf) {
