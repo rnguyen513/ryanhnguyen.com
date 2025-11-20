@@ -13,6 +13,7 @@ export default function Secret() {
     const [audioFiles, setAudioFiles] = useState<AudioFile[]>([]);
     const [loading, setLoading] = useState(true);
     const [currentlyPlaying, setCurrentlyPlaying] = useState<string | null>(null);
+    const [downloading, setDownloading] = useState<string | null>(null);
 
     useEffect(() => {
         async function fetchAudioFiles() {
@@ -37,6 +38,28 @@ export default function Secret() {
 
     const handlePause = () => {
         setCurrentlyPlaying(null);
+    };
+
+    const handleDownload = async (url: string, fileName: string) => {
+        try {
+            setDownloading(fileName);
+            const response = await fetch(url);
+            const blob = await response.blob();
+            const blobUrl = window.URL.createObjectURL(blob);
+
+            const link = document.createElement('a');
+            link.href = blobUrl;
+            link.download = fileName;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            window.URL.revokeObjectURL(blobUrl);
+        } catch (error) {
+            console.error('Error downloading file:', error);
+        } finally {
+            setDownloading(null);
+        }
     };
 
     return (
@@ -81,11 +104,10 @@ export default function Secret() {
                                                 Your browser does not support the audio element.
                                             </audio>
 
-                                            <a
-                                                href={audioFile.url}
-                                                download={audioFile.fileName}
+                                            <button
+                                                onClick={() => handleDownload(audioFile.url, audioFile.fileName)}
+                                                disabled={downloading === audioFile.fileName}
                                                 className=""
-                                                target="_blank"
                                             >
                                                 <svg
                                                     className="w-4 h-4 mr-2"
@@ -101,7 +123,8 @@ export default function Secret() {
                                                         d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
                                                     />
                                                 </svg>
-                                            </a>
+                                                {downloading === audioFile.fileName ? '...' : ''}
+                                            </button>
 
                                             {currentlyPlaying === audioFile.fileName && (
                                                 <div className="flex items-center justify-center space-x-2 text-green-400 text-sm">
