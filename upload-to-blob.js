@@ -49,6 +49,7 @@ async function uploadAudioFiles() {
         const blob = await put(`audio/${fileName}`, fileBuffer, {
           access: 'public',
           token: process.env.BLOB_READ_WRITE_TOKEN,
+          allowOverwrite: true, // Allow replacing existing files with same name
         });
 
         console.log(`   ✅ Success: ${blob.url}\n`);

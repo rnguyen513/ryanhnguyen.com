@@ -71,6 +71,7 @@ export default function Secret() {
 
                                             <audio
                                                 controls
+                                                preload="none"
                                                 className="w-full"
                                                 onPlay={() => handlePlay(audioFile.fileName)}
                                                 onPause={handlePause}
