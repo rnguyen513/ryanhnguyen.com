@@ -1,38 +1,35 @@
-import { GetServerSideProps } from 'next';
-import { promises as fs } from 'fs';
-import path from 'path';
 import Head from 'next/head';
 import Header from '@/components/header';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
-type SecretPageProps = {
-    audioFiles: string[];
+type AudioFile = {
+    url: string;
+    fileName: string;
+    size: number;
+    uploadedAt: string;
 };
 
-export const getServerSideProps: GetServerSideProps<SecretPageProps> = async () => {
-    const audioDir = path.join(process.cwd(), 'public', 'audio');
-
-    try {
-        const files = await fs.readdir(audioDir);
-        const wavFiles = files.filter(file => file.endsWith('.wav'));
-
-        return {
-            props: {
-                audioFiles: wavFiles,
-            },
-        };
-    } catch (error) {
-        // If directory doesn't exist or error reading, return empty array
-        return {
-            props: {
-                audioFiles: [],
-            },
-        };
-    }
-};
-
-export default function Secret({ audioFiles }: SecretPageProps) {
+export default function Secret() {
+    const [audioFiles, setAudioFiles] = useState<AudioFile[]>([]);
+    const [loading, setLoading] = useState(true);
     const [currentlyPlaying, setCurrentlyPlaying] = useState<string | null>(null);
+
+    useEffect(() => {
+        async function fetchAudioFiles() {
+            try {
+                const response = await fetch('/api/audio-list');
+                const data = await response.json();
+                setAudioFiles(data.audioFiles || []);
+            } catch (error) {
+                console.error('Error fetching audio files:', error);
+                setAudioFiles([]);
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        fetchAudioFiles();
+    }, []);
 
     const handlePlay = (fileName: string) => {
         setCurrentlyPlaying(fileName);
@@ -52,40 +49,47 @@ export default function Secret({ audioFiles }: SecretPageProps) {
                 <Header />
 
                 <div className="container mx-auto px-4 py-12">
-                    {audioFiles.length === 0 ? (
+                    {loading ? (
+                        <p className="text-white text-center text-xl">loading...</p>
+                    ) : audioFiles.length === 0 ? (
                         <p className="text-white text-center text-xl">nothing rn</p>
                     ) : (
                         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 max-w-6xl mx-auto">
-                            {audioFiles.map((fileName) => (
-                                <div
-                                    key={fileName}
-                                    className="bg-gray-100/10 backdrop-blur-sm ring-1 ring-gray-300/20 shadow-lg rounded-xl p-6 hover:bg-gray-100/15 transition-all"
-                                >
-                                    <div className="flex flex-col space-y-4">
-                                        <h3 className="text-xl font-bold text-white truncate" title={fileName}>
-                                            {fileName.replace('.wav', '')}
-                                        </h3>
+                            {audioFiles.map((audioFile) => {
+                                const fileExtension = audioFile.fileName.endsWith('.mp3') ? 'mp3' : 'wav';
+                                const displayName = audioFile.fileName.replace(/\.(wav|mp3)$/, '');
 
-                                        <audio
-                                            controls
-                                            className="w-full"
-                                            onPlay={() => handlePlay(fileName)}
-                                            onPause={handlePause}
-                                            onEnded={handlePause}
-                                        >
-                                            <source src={`/audio/${fileName}`} type="audio/wav" />
-                                            Your browser does not support the audio element.
-                                        </audio>
+                                return (
+                                    <div
+                                        key={audioFile.fileName}
+                                        className="bg-gray-100/10 backdrop-blur-sm ring-1 ring-gray-300/20 shadow-lg rounded-xl p-6 hover:bg-gray-100/15 transition-all"
+                                    >
+                                        <div className="flex flex-col space-y-4">
+                                            <h3 className="text-xl font-bold text-white truncate" title={audioFile.fileName}>
+                                                {displayName}
+                                            </h3>
 
-                                        {currentlyPlaying === fileName && (
-                                            <div className="flex items-center justify-center space-x-2 text-green-400 text-sm">
-                                                <span>●</span>
-                                                {/* <span>Now Playing</span> */}
-                                            </div>
-                                        )}
+                                            <audio
+                                                controls
+                                                className="w-full"
+                                                onPlay={() => handlePlay(audioFile.fileName)}
+                                                onPause={handlePause}
+                                                onEnded={handlePause}
+                                            >
+                                                <source src={audioFile.url} type={`audio/${fileExtension}`} />
+                                                Your browser does not support the audio element.
+                                            </audio>
+
+                                            {currentlyPlaying === audioFile.fileName && (
+                                                <div className="flex items-center justify-center space-x-2 text-green-400 text-sm">
+                                                    <span>●</span>
+                                                    {/* <span>Now Playing</span> */}
+                                                </div>
+                                            )}
+                                        </div>
                                     </div>
-                                </div>
-                            ))}
+                                );
+                            })}
                         </div>
                     )}
 
