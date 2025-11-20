@@ -22,25 +22,25 @@ export default function Header() {
                             <Button variant="bordered" className="text-3xl">&equiv;</Button>
                         </DropdownTrigger>
                         <DropdownMenu variant="faded" aria-label="Static Actions" className="bg-gray-500/95 ring-2 ring-gray-300/50  rounded-lg font-extrabold text-white">
-                            <DropdownItem key="rnguyen" href="/" className="font-bold">Ryan Nguyen</DropdownItem>
-                            <DropdownItem key="about" href="about">About</DropdownItem>
+                            {/* <DropdownItem key="rnguyen" href="/" className="font-bold">Ryan Nguyen</DropdownItem> */}
+                            {/* <DropdownItem key="about" href="about">About</DropdownItem> */}
                             <DropdownItem key="resume" href="resume">Resume</DropdownItem>
-                            <DropdownItem key="projects" href="projects">Projects</DropdownItem>
+                            {/* <DropdownItem key="projects" href="projects">Projects</DropdownItem> */}
                             <DropdownItem key="contact" href="contact">Contact</DropdownItem>
-                            <DropdownItem key="reminders" href="reminders">Reminders</DropdownItem>
+                            {/* <DropdownItem key="reminders" href="reminders">Reminders</DropdownItem> */}
                         </DropdownMenu>
                     </Dropdown>
                 </div>
                 <div className="hidden lg:flex">
-                    <HeaderCell href="/" text="Ryan Nguyen"></HeaderCell>
-                    <HeaderCell href="about" text="About"></HeaderCell>
+                    {/* <HeaderCell href="/" text="Ryan Nguyen"></HeaderCell> */}
+                    {/* <HeaderCell href="about" text="About"></HeaderCell> */}
                     <HeaderCell href="resume" text="Resume"></HeaderCell>
-                    <HeaderCell href="projects" text="Projects"></HeaderCell>
+                    {/* <HeaderCell href="projects" text="Projects"></HeaderCell> */}
                     <HeaderCell href="contact" text="Contact"></HeaderCell>
-                    <HeaderCell href="reminders" text="Reminders"></HeaderCell>
+                    {/* <HeaderCell href="reminders" text="Reminders"></HeaderCell> */}
                 </div>
             </div>
-            <div className="flex flex-row items-center pr-5 font-bold text-white">
+            {/* <div className="flex flex-row items-center pr-5 font-bold text-white">
                 {(status != "authenticated") ? ((status == "loading") ? (
                     <p>Loading...</p>
                 ) : (
@@ -56,7 +56,7 @@ export default function Header() {
                         <button onClick={() => signOut({redirect:false})} className="text-blue-200 rounded-lg px-2 py-1 bg-red-200/20">Sign out&rarr;</button>
                     </div>
                 )}
-            </div>
+            </div> */}
         </div>
     )
 }

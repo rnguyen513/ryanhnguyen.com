@@ -17,19 +17,28 @@ export type ConnectionStatus = {
 }
 
 export const getServerSideProps: GetServerSideProps<ConnectionStatus> = async () => {
-    try {
-        await clientPromise;
+    // Temporary redirect to /resume
+    return {
+        redirect: {
+            destination: '/resume',
+            permanent: false,
+        },
+    };
 
-        return {
-            props: {isConnected: true}
-        };
-    }
-    catch (e) {
-        console.error(e);
-        return {
-            props: {isConnected: false}
-        };
-    }
+    // Original code (commented out for temporary redirect)
+    // try {
+    //     await clientPromise;
+
+    //     return {
+    //         props: {isConnected: true}
+    //     };
+    // }
+    // catch (e) {
+    //     console.error(e);
+    //     return {
+    //         props: {isConnected: false}
+    //     };
+    // }
 }
 
 const inter = Inter({ subsets: ['latin'] })
