@@ -81,6 +81,28 @@ export default function Secret() {
                                                 Your browser does not support the audio element.
                                             </audio>
 
+                                            <a
+                                                href={audioFile.url}
+                                                download={audioFile.fileName}
+                                                className=""
+                                                target="_blank"
+                                            >
+                                                <svg
+                                                    className="w-4 h-4 mr-2"
+                                                    fill="none"
+                                                    stroke="currentColor"
+                                                    viewBox="0 0 24 24"
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                >
+                                                    <path
+                                                        strokeLinecap="round"
+                                                        strokeLinejoin="round"
+                                                        strokeWidth={2}
+                                                        d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+                                                    />
+                                                </svg>
+                                            </a>
+
                                             {currentlyPlaying === audioFile.fileName && (
                                                 <div className="flex items-center justify-center space-x-2 text-green-400 text-sm">
                                                     <span>●</span>
